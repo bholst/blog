@@ -1,0 +1,22 @@
+User
+    ident Text
+    password Text Maybe
+    UniqueUser ident
+    deriving Typeable
+Email
+    email Text
+    user UserId Maybe
+    verkey Text Maybe
+    UniqueEmail email
+Entry
+    title Text
+    posted UTCTime
+    content Html
+Comment
+    entry EntryId
+    posted UTCTime
+    user UserId
+    name Text
+    text Textarea
+
+ -- By default this file is used in Model.hs (which is imported by Foundation.hs)

@@ -1,0 +1,24 @@
+Default: &defaults
+  user: blog
+  password: <enter password here>
+  host: localhost
+  port: 5432
+  database: blog
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: blog_test
+  <<: *defaults
+
+Staging:
+  database: blog_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: blog_production
+  poolsize: 100
+  <<: *defaults
