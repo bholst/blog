@@ -1,0 +1,21 @@
+<h1>#{entryTitle entry}
+<article>#{entryContent entry}
+    <section .comments>
+        <h1>_{MsgCommentsHeading}
+
+        $if null comments
+            <p>_{MsgNoComments}
+        $else
+            $forall Comment _entry posted _user name text <- comments
+                <div .comment>
+                    <span .by>#{name}
+                    <span .at>#{show posted}
+                    <div .content>#{text}
+        <section>
+            <h1>_{MsgAddCommentHeading}
+            $maybe (commentWidget, enctype) <- mCommentWidget
+                <form .form-horizontal role=form method=post enctype=#{enctype}>
+                    ^{commentWidget}
+            $nothing
+                <p>
+                    <a href=@{AuthR LoginR}>_{MsgLoginToComment}

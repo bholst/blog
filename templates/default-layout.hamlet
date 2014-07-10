@@ -1,3 +1,24 @@
-$maybe msg <- mmsg
-    <div #message>#{msg}
-^{widget}
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar">
+        <span class="icon-bar">
+        <span class="icon-bar">
+      <a class="navbar-brand" href=@{HomeR}>_{MsgHomepageTitle}</a>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href=@{HomeR}>Home
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          $maybe _ <- muser
+            <a href=@{AuthR LogoutR}>Logout
+          $nothing
+            <a href=@{AuthR LoginR}>Login
+
+<div class="container">
+  $maybe msg <- mmsg
+    <div class="alert alert-info" role="alert">
+      #{msg}
+  ^{widget}

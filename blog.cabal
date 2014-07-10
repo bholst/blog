@@ -20,6 +20,8 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      Handler.Home
+                     Handler.Blog
+                     Handler.Entry
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

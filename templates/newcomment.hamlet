@@ -1,0 +1,4 @@
+<form method=post enctype=#{enctype}>
+    ^{commentWidget}
+    <div>
+        <input type=submit value=_{MsgAddCommentButton}>

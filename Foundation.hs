@@ -1,6 +1,7 @@
 module Foundation where
 
 import Prelude
+import Data.Text
 import Yesod
 import Yesod.Static
 import Yesod.Auth
@@ -8,6 +9,7 @@ import Yesod.Auth.BrowserId
 import Yesod.Auth.OpenId
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
+import Yesod.Form.Nic
 import Network.HTTP.Client.Conduit (Manager, HasHttpManager (getHttpManager))
 import qualified Settings
 import Settings.Development (development)
@@ -65,6 +67,8 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
 
+        muser <- maybeAuth
+
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final
@@ -110,6 +114,24 @@ instance Yesod App where
 
     makeLogger = return . appLogger
 
+    isAuthorized BlogR True = do
+        mauth <- maybeAuth
+        case mauth of
+            Nothing -> return AuthenticationRequired
+            Just (Entity _ user)
+              | isAdmin user -> return   Authorized
+              | otherwise    -> unauthorizedI MsgNotAnAdmin
+    isAuthorized (EntryR _) True = do
+        mauth <- maybeAuth
+        case mauth of
+            Nothing -> return AuthenticationRequired
+            Just _  -> return Authorized
+    isAuthorized _ _ = do
+        return Authorized
+
+isAdmin :: User -> Bool
+isAdmin user = userIdent user == "bastianholst@gmx.de"
+
 -- How to run database actions.
 instance YesodPersist App where
     type YesodPersistBackend App = SqlPersistT
@@ -145,6 +167,9 @@ instance YesodAuth App where
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage
+
+-- To be able to use the Nic HTML editor.
+instance YesodNic App
 
 -- | Get the 'Extra' value, used to hold data from the settings.yml file.
 getExtra :: Handler Extra
