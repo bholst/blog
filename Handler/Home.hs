@@ -4,8 +4,5 @@ import Import
 
 getHomeR :: Handler Html
 getHomeR =
-    defaultLayout $ do
-        aDomId <- newIdent
-        setTitleI MsgHomepageTitle
-        $(widgetFile "homepage")
+  redirect BlogR
 
