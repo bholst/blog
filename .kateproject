@@ -1,0 +1,6 @@
+{ "name": "blog"
+, "projects": [
+    { "name": "blog"
+    , "files": [ { "git": 1 } ] }
+  ]
+}
