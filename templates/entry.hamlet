@@ -1,4 +1,10 @@
-<h1>#{entryTitle entry}
+<div>
+  <h1 class="alignleft">#{entryTitle entry}
+  $maybe Entity _ user <- muser
+    $if isAdmin user
+      <a href=@{EditEntryR entryId} class="alignright">
+        <button type="button" class="btn btn-default">_{MsgEditEntry}
+<div style="clear: both;">
 <article>#{entryContent entry}
     <section .comments>
         <h1>_{MsgCommentsHeading}

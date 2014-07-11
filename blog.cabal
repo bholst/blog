@@ -22,6 +22,8 @@ library
                      Handler.Home
                      Handler.Blog
                      Handler.Entry
+                     Handler.EditEntry
+                     Handler.NewEntry
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

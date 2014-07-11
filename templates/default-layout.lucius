@@ -13,3 +13,10 @@ textarea {
 
 body {
 }
+
+.alignleft {
+        float: left;
+}
+.alignright {
+        float: right;
+}

@@ -81,6 +81,11 @@ instance Yesod App where
                 , css_bootstrap_css
                 ])
             $(widgetFile "default-layout")
+        scripts <- widgetToPageContent
+            $(combineScripts 'StaticR
+                [ js_jquery_js
+                , js_bootstrap_js ])
+
         giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
     -- This is done to provide an optimization for serving static files from
@@ -114,20 +119,26 @@ instance Yesod App where
 
     makeLogger = return . appLogger
 
-    isAuthorized BlogR True = do
-        mauth <- maybeAuth
-        case mauth of
-            Nothing -> return AuthenticationRequired
-            Just (Entity _ user)
-              | isAdmin user -> return   Authorized
-              | otherwise    -> unauthorizedI MsgNotAnAdmin
-    isAuthorized (EntryR _) True = do
-        mauth <- maybeAuth
-        case mauth of
-            Nothing -> return AuthenticationRequired
-            Just _  -> return Authorized
+    isAuthorized BlogR True = adminAuthorized
+    isAuthorized (EntryR _) True = allUsersAuthorized
+    isAuthorized NewEntryR _ = adminAuthorized
+    isAuthorized (EditEntryR _) _ = adminAuthorized
     isAuthorized _ _ = do
         return Authorized
+
+allUsersAuthorized = do
+    mauth <- maybeAuth
+    case mauth of
+        Nothing -> return AuthenticationRequired
+        Just _  -> return Authorized
+
+adminAuthorized = do
+    mauth <- maybeAuth
+    case mauth of
+        Nothing -> return AuthenticationRequired
+        Just (Entity _ user)
+          | isAdmin user -> return   Authorized
+          | otherwise    -> unauthorizedI MsgNotAnAdmin
 
 isAdmin :: User -> Bool
 isAdmin user = userIdent user == "bastianholst@gmx.de"

@@ -5,10 +5,4 @@ $else
         $forall Entity entryId entry <- entries
             <li>
                 <a href=@{EntryR entryId}>#{entryTitle entry}
-$maybe Entity _ user <- muser
-    $if isAdmin user
-        <form .form-horizontal role=form method=post enctype=#{enctype}>
-            ^{entryWidget}
-$nothing
-    <p>
-        <a href=@{AuthR LoginR}>_{MsgLoginToPost}
+

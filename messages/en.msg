@@ -6,12 +6,16 @@ SeeArchive: See the archive
 
 NoEntries: There are no entries in the blog
 LoginToPost: Admins can login to post
-NewEntry: Post to blog
+NewEntry: New Entry
+SaveEntryChanges: Save Changes
 NewEntryTitle: Title
+EditEntryTitle: Edit Entry
 NewEntryContent: Content
+EditEntry: Edit Entry
 
 PleaseCorrectEntry: Your submitted entry had some errors, please correct and try again.
 EntryCreated title@Text: Your new blog post, #{title}, has been created
+EntryEdited title@Text: Your blog post, #{title}, has been updated
 
 EntryTitle title@Text: Blog post: #{title}
 CommentsHeading: Comments
@@ -27,3 +31,8 @@ PleaseCorrectComment: Your submitted comment had some errors, please correct and
 
 HomepageTitle: Yesod Blog
 BlogArchiveTitle: Blog Archive
+
+Login: Login
+Logout: Logout
+
+Menu: Menu

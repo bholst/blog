@@ -1,4 +1,2 @@
-<form method=post enctype=#{enctype}>
-    ^{entryWidget}
-    <div>
-        <input type=submit value=_{MsgNewEntry}>
+<form .form-horizontal role=form method=post enctype=#{enctype}>
+  ^{entryWidget}
