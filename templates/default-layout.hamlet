@@ -5,7 +5,7 @@
         <span class="icon-bar">
         <span class="icon-bar">
         <span class="icon-bar">
-      <a class="navbar-brand" href=@{HomeR}>_{MsgHomepageTitle}</a>
+      <a class="navbar-brand" href=@{HomeR}>#{pagename}</a>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         $maybe Entity _ user <- muser

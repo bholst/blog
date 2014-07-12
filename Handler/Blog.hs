@@ -11,11 +11,12 @@ getBlogR = do
   muser <- maybeAuth
   entries <- runDB $
     selectSource [] [Desc EntryPosted] =$ countComments $$ CL.consume
-  mr <- getMessageRender
+  extra <- getExtra
+  let pagename = extraPagename extra
   defaultLayout $ do
     setTitleI MsgBlogTitle
-    rssLink RssFeedR $ mr MsgHomepageTitle
-    atomLink AtomFeedR $ mr MsgHomepageTitle
+    rssLink RssFeedR $ pagename
+    atomLink AtomFeedR $ pagename
     $(widgetFile "blog")
   where
     countComments = awaitForever (\entity -> do

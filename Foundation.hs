@@ -73,6 +73,9 @@ instance Yesod App where
 
         muser <- maybeAuth
 
+        extra <- getExtra
+        let pagename = extraPagename extra
+
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final

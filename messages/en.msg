@@ -1,6 +1,5 @@
 NotAnAdmin: You must be an administrator to access this page.
 
-HomepageTitle: Yesod Blog
 Menu: Menu
 Login: Login
 Logout: Logout

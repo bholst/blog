@@ -17,9 +17,9 @@ getFeed = do
     entries <- runDB $ do
       entries <- selectList [] [Desc EntryPosted]
       return $ map entry2FeedEntry entries
-    mr <- getMessageRender
-    let title = mr MsgHomepageTitle
-        author = ""
+    extra <- getExtra
+    let title  = extraPagename extra
+        author = extraAuthor   extra
         language = "en"
     updated <- case entries of
                  [] -> liftIO $ getCurrentTime
