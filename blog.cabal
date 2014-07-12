@@ -1,6 +1,7 @@
 name:              blog
 version:           0.0.0
 cabal-version:     >= 1.8
+license:           GPL
 build-type:        Simple
 
 Flag dev
