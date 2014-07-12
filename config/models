@@ -11,7 +11,7 @@ Email
 Entry
     title Text
     posted UTCTime
-    content Html
+    content Markdown
 Comment
     entry EntryId
     posted UTCTime

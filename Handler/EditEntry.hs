@@ -6,13 +6,16 @@ where
 
 import Import
 import Data.Time.Clock
-import Yesod.Form.Nic
 
 entryForm :: RenderMessage App msg => msg -> Maybe Entry -> Form Entry
-entryForm msg mentry = renderDivs $ Entry
+entryForm msg mentry =
+    let cfs        = (bfs MsgNewEntryContent) :: FieldSettings App
+        attributes = ("rows", "20") : fsAttrs cfs
+        newCfs     = cfs { fsAttrs = attributes }
+    in  renderDivs $ Entry
     <$> areq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
     <*> maybe (lift (liftIO getCurrentTime)) (\entry -> pure $ entryPosted entry) mentry
-    <*> areq nicHtmlField (bfs MsgNewEntryContent) (entryContent <$> mentry)
+    <*> areq markdownField newCfs (entryContent <$> mentry)
     <*  bootstrapSubmit (BootstrapSubmit msg "" [])
 
 getEditEntryR :: EntryId -> Handler Html

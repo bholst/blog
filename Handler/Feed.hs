@@ -27,4 +27,4 @@ getFeed = do
     return $ Feed title RssFeedR BlogR author (toHtml ("" :: Text)) language updated entries
  where
   entry2FeedEntry (Entity entryId entry) =
-    FeedEntry (EntryR entryId) (entryPosted entry) (entryTitle entry) (entryContent entry)
+    FeedEntry (EntryR entryId) (entryPosted entry) (entryTitle entry) (toHtml $ entryContent entry)

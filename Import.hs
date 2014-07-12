@@ -9,6 +9,7 @@ import           Yesod                 as Import hiding (Route (..))
 
 import           Control.Applicative   as Import (pure, (<$>), (<*>), (<*))
 import           Data.Text             as Import (Text)
+import           Text.Markdown         as Import
 
 import           Foundation            as Import
 import           Model                 as Import
@@ -17,6 +18,7 @@ import           Settings.Development  as Import
 import           Settings.StaticFiles  as Import
 import           Yesod.Auth            as Import
 import           Yesod.Form.Bootstrap3 as Import
+import           Yesod.Text.Markdown   as Import
 
 #if __GLASGOW_HASKELL__ >= 704
 import           Data.Monoid           as Import
