@@ -123,6 +123,7 @@ instance Yesod App where
     isAuthorized (EntryR _) True = allUsersAuthorized
     isAuthorized NewEntryR _ = adminAuthorized
     isAuthorized (EditEntryR _) _ = adminAuthorized
+    isAuthorized (DeleteEntryR _) _ = adminAuthorized
     isAuthorized _ _ = do
         return Authorized
 

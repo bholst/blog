@@ -1,0 +1,4 @@
+<form .form-horizontal enctype=#{enctype} role=form method=post>
+  ^{formWidget}
+<h1>#{entryTitle entry}
+<article>#{entryContent entry}

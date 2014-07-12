@@ -1,0 +1,4 @@
+#{extra}
+<p>
+  _{MsgReallyDeleteEntry}
+  ^{fvInput submitView}

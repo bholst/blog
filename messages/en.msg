@@ -11,7 +11,12 @@ SaveEntryChanges: Save Changes
 NewEntryTitle: Title
 EditEntryTitle: Edit Entry
 NewEntryContent: Content
-EditEntry: Edit Entry
+EditEntry: Edit
+DeleteEntry: Delete
+ReallyDeleteEntryTitle: Do you really want to delete?
+ReallyDeleteEntry: Do you really want to delete the following entry?
+ReallyDeleteSubmit: Delete
+EntryDeleted: Blog post has been deleted.
 
 PleaseCorrectEntry: Your submitted entry had some errors, please correct and try again.
 EntryCreated title@Text: Your new blog post, #{title}, has been created

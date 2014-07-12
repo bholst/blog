@@ -2,8 +2,16 @@
   <h1 class="alignleft">#{entryTitle entry}
   $maybe Entity _ user <- muser
     $if isAdmin user
-      <a href=@{EditEntryR entryId} class="alignright">
-        <button type="button" class="btn btn-default">_{MsgEditEntry}
+        <div class="btn-group" class="alignright">
+          <a type="button" class="btn btn-default"  href=@{EditEntryR entryId}>_{MsgEditEntry}
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="caret">
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+              <li>
+                <a href=@{EditEntryR entryId}>_{MsgEditEntry}
+              <li>
+                <a href=@{DeleteEntryR entryId}>_{MsgDeleteEntry}
 <div style="clear: both;">
 <article>#{entryContent entry}
     <section .comments>

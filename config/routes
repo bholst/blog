@@ -10,3 +10,4 @@
 /blog/entry/#EntryId EntryR GET POST
 /blog/entry/#EntryId/edit EditEntryR GET POST
 /blog/new NewEntryR GET POST
+/blog/entry/#EntryId/delete DeleteEntryR GET POST
