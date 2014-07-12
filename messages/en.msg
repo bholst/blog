@@ -15,6 +15,7 @@ FirstToComment: Be the first to comment!
 EntryTitle title@Text: Blog post: #{title}
 EditEntry: Edit
 DeleteEntry: Delete
+DeleteComment: Delete
 CommentsHeading: Comments
 NoComments: There are no comments.
 AddCommentHeading: Add a Comment
@@ -30,10 +31,16 @@ PleaseCorrectEntry: Your submitted entry had some errors, please correct and try
 EntryCreated title@Text: Your new blog post, #{title}, has been created.
 EntryEdited title@Text: Your blog post, #{title}, has been updated.
 
-ReallyDeleteEntryTitle: Do you really want to delete?
+ReallyDeleteEntryTitle: Do you really want to delete this entry?
 ReallyDeleteEntry: Do you really want to delete the following entry?
 ReallyDeleteSubmit: Delete
 EntryDeleted: Blog post has been deleted.
+
+AdminAndAuthorAuthorizedDeleteComment: Only the admin and the author of the comment are allowed to delete this comment.
+ReallyDeleteComment: Do you really want to delete the following comment?
+ReallyDeleteCommentTitle: Do you really want to delete this comment?
+CommentDeleted: Comment has been deleted.
+CommentNotDeleted: Comment has not been deleted.
 
 CommentName: Your display name
 CommentText: Comment

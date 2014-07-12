@@ -2,8 +2,6 @@ module Handler.DeleteEntry where
 
 import Import
 
--- data Foo = Foo Int
-
 deleteForm :: Html -> MForm Handler (FormResult (), Widget)
 deleteForm extra = do
   (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit MsgReallyDeleteSubmit "" [])

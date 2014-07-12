@@ -128,6 +128,20 @@ instance Yesod App where
     isAuthorized NewEntryR _ = adminAuthorized
     isAuthorized (EditEntryR _) _ = adminAuthorized
     isAuthorized (DeleteEntryR _) _ = adminAuthorized
+    isAuthorized (DeleteCommentR commentId) _ = do
+      mauth <- maybeAuth
+      case mauth of
+        Nothing -> return AuthenticationRequired
+        Just (Entity userId user)
+          | isAdmin user -> return Authorized
+          | otherwise    -> do
+            commentAuthor <- runDB $ do
+                comment <- get404 commentId
+                return $ commentUser comment
+            if commentAuthor == userId
+              then return Authorized
+              else unauthorizedI MsgAdminAndAuthorAuthorizedDeleteComment
+
     isAuthorized _ _ = do
         return Authorized
 
@@ -140,10 +154,10 @@ allUsersAuthorized = do
 adminAuthorized = do
     mauth <- maybeAuth
     case mauth of
-        Nothing -> return AuthenticationRequired
-        Just (Entity _ user)
-          | isAdmin user -> return   Authorized
-          | otherwise    -> unauthorizedI MsgNotAnAdmin
+      Nothing -> return AuthenticationRequired
+      Just (Entity _ user)
+        | isAdmin user -> return   Authorized
+        | otherwise    -> unauthorizedI MsgNotAnAdmin
 
 isAdmin :: User -> Bool
 isAdmin user = userIdent user == "bastianholst@gmx.de"

@@ -11,3 +11,4 @@
 /blog/entry/#EntryId/edit EditEntryR GET POST
 /blog/new NewEntryR GET POST
 /blog/entry/#EntryId/delete DeleteEntryR GET POST
+/blog/comment/#CommentId/delete DeleteCommentR GET POST

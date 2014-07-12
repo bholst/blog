@@ -12,12 +12,22 @@ commentForm entryId = renderDivs $ Comment
     <*> areq textareaField (bfs MsgCommentText) Nothing
     <*  bootstrapSubmit (BootstrapSubmit MsgAddCommentButton "" [])
 
+canDeleteCommentBy :: Maybe (Entity User) -> UserId -> Bool
+canDeleteCommentBy muser commentUserId =
+  case muser of
+    Nothing -> False
+    Just (Entity currentUserId currentUser) ->
+      if isAdmin currentUser
+        then True
+        else currentUserId == commentUserId
+
+
 getEntryR :: EntryId -> Handler Html
 getEntryR entryId = do
     (entry, comments) <- runDB $ do
         entry <- get404 entryId
         comments <- selectList [CommentEntry ==. entryId] [Asc CommentPosted]
-        return (entry, map entityVal comments)
+        return (entry, comments)
     muser <- maybeAuth
     mCommentWidget <-
       case muser of

@@ -25,6 +25,7 @@ library
                      Handler.EditEntry
                      Handler.NewEntry
                      Handler.DeleteEntry
+                     Handler.DeleteComment
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

@@ -2,9 +2,9 @@
   <h1 class="alignleft">#{entryTitle entry}
   $maybe Entity _ user <- muser
     $if isAdmin user
-        <div class="btn-group" class="alignright">
+        <div class="btn-group btn-group-sm" class="alignright">
           <a type="button" class="btn btn-default"  href=@{EditEntryR entryId}>_{MsgEditEntry}
-          <div class="btn-group">
+          <div class="btn-group btn-group-sm">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="caret">
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -20,10 +20,12 @@
         $if null comments
             <p>_{MsgNoComments}
         $else
-            $forall Comment _entry posted _user name text <- comments
+            $forall Entity commentId (Comment _entry posted commentUser name text) <- comments
                 <div .comment>
                     <span .by>#{name}
                     <span .at>#{show posted}
+                    $if canDeleteCommentBy muser commentUser
+                        <a href=@{DeleteCommentR commentId}>_{MsgDeleteComment}
                     <div .content>#{text}
         <section>
             <h1>_{MsgAddCommentHeading}
