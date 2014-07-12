@@ -38,6 +38,10 @@ data App = App
 instance HasHttpManager App where
     getHttpManager = httpManager
 
+plural :: Int -> String -> String -> String
+plural 1 x _ = x
+plural _ _ y = y
+
 -- Set up i18n messages. See the message folder.
 mkMessage "App" "messages" "en"
 

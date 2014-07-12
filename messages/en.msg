@@ -8,6 +8,9 @@ NewEntry: New Entry
 
 BlogTitle: Blog
 NoEntries: There are no entries in the blog.
+ReadMoreEntry: Read more
+NumberOfComments n@Int: #{show n} #{plural n "comment" "comments"}
+FirstToComment: Be the first to comment!
 
 EntryTitle title@Text: Blog post: #{title}
 EditEntry: Edit

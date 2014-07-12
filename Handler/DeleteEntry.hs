@@ -22,7 +22,7 @@ getDeleteEntryR entryId = do
 
 postDeleteEntryR :: EntryId -> Handler Html
 postDeleteEntryR entryId = do
-  ((res, _), enctype) <-
+  ((res, _), _) <-
     runFormPost deleteForm
   case res of
     FormSuccess _ -> do

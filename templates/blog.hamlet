@@ -1,8 +1,13 @@
 $if null entries
-    <p>_{MsgNoEntries}
+  <p>_{MsgNoEntries}
 $else
-    <ul>
-        $forall Entity entryId entry <- entries
-            <li>
-                <a href=@{EntryR entryId}>#{entryTitle entry}
-
+  $forall (Entity entryId entry, comments) <- entries
+    <a href=@{EntryR entryId}>
+      <h1>#{entryTitle entry}
+    <article>#{entryContent entry}
+    <p>
+      <a href=@{EntryR entryId}>
+        $if comments == 0
+          _{MsgFirstToComment}
+        $else
+          _{MsgNumberOfComments comments}
