@@ -5,6 +5,7 @@ Default: &defaults
   copyright: Insert copyright statement here
   pagename: Pagename
   author: Authorname
+  admin: user@example.com
   #analytics: UA-YOURCODE
 
 Development:

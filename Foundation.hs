@@ -163,7 +163,7 @@ adminAuthorized = do
         | otherwise    -> unauthorizedI MsgNotAnAdmin
 
 isAdmin :: User -> Bool
-isAdmin user = userIdent user == "bastianholst@gmx.de"
+isAdmin user = userAdmin user
 
 -- How to run database actions.
 instance YesodPersist App where
@@ -180,15 +180,19 @@ instance YesodAuth App where
     -- Where to send a user after logout
     logoutDest _ = HomeR
 
-    getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
-        case x of
-            Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert User
-                    { userIdent = credsIdent creds
-                    , userPassword = Nothing
-                    }
+
+    getAuthId creds = do
+        extra <- getExtra
+        runDB $ do
+            x <- getBy $ UniqueUser $ credsIdent creds
+            case x of
+                Just (Entity uid _) -> return $ Just uid
+                Nothing -> do
+                    fmap Just $ insert User
+                        { userIdent = credsIdent creds
+                        , userPassword = Nothing
+                        , userAdmin    = (extraAdmin extra == credsIdent creds)
+                        }
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins _ = [ authBrowserId def
