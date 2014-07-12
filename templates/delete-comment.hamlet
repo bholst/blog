@@ -1,0 +1,6 @@
+<form .form-horizontal enctype=#{enctype} role=form method=post>
+  ^{formWidget}
+<div .comment>
+  <span .by>#{commentName comment}
+  <span .at>#{show (commentPosted comment)}
+  <div .content>#{commentText comment}

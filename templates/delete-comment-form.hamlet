@@ -1,0 +1,4 @@
+#{extra}
+<p>
+  _{MsgReallyDeleteComment}
+  ^{fvInput submitView}
