@@ -86,12 +86,15 @@ instance Yesod App where
             $(combineStylesheets 'StaticR
                 [ css_normalize_css
                 , css_bootstrap_css
+                , css_prism_css
                 ])
             $(widgetFile "default-layout")
         scripts <- widgetToPageContent
             $(combineScripts 'StaticR
                 [ js_jquery_js
-                , js_bootstrap_js ])
+                , js_bootstrap_js
+                , js_prism_js
+                , js_prism_haskell_js ])
 
         giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 

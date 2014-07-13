@@ -15,3 +15,7 @@ body {
 .alignright {
         float: right;
 }
+
+pre[class*="language-"] > code[data-language] {
+    overflow: auto;
+}
