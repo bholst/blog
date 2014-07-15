@@ -33,8 +33,10 @@ getEntryR entryId = do
       case muser of
         Nothing -> return Nothing
         Just _  -> generateFormPost (commentForm entryId) >>= return . Just
+    extra <- getExtra
+    let pagename = extraPagename extra
     defaultLayout $ do
-        setTitleI $ MsgEntryTitle $ entryTitle entry
+        setTitleI $ MsgEntryTitle pagename $ entryTitle entry
         $(widgetFile "entry")
 
 

@@ -12,9 +12,9 @@ NoCategoryEntries name@Text: There are no entries in the category #{name}.
 ReadMoreEntry: Read more
 NumberOfComments n@Int: #{show n} #{plural n "comment" "comments"}
 FirstToComment: Be the first to comment!
-CategoryTitle blog@Text category@Text: #{blog}: #{category}
+CategoryTitle blog@Text category@Text: #{blog}: category #{category}
 
-EntryTitle title@Text: Blog post: #{title}
+EntryTitle blog@Text title@Text: #{blog}: #{title}
 EditEntry: Edit
 DeleteEntry: Delete
 DeleteComment: Delete
