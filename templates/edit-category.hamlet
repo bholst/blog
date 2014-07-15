@@ -1,0 +1,3 @@
+<h1>_{MsgEditCategoryHeader}
+<form .form-horizontal role=form method=post action=@{EditCategoryR categoryId} enctype=#{enctype}>
+  ^{formWidget}

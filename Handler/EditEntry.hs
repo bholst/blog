@@ -4,39 +4,59 @@ module Handler.EditEntry
   , entryForm )
 where
 
-import Import
+import Import hiding (mapM)
 import Data.Time.Clock
+import Data.Traversable (mapM)
 
-entryForm :: RenderMessage App msg => msg -> Maybe Entry -> Form Entry
-entryForm msg mentry =
-    let cfs        = (bfs MsgNewEntryContent) :: FieldSettings App
-        attributes = ("rows", "20") : fsAttrs cfs
-        newCfs     = cfs { fsAttrs = attributes }
-    in  renderDivs $ Entry
-    <$> areq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
-    <*> maybe (lift (liftIO getCurrentTime)) (\entry -> pure $ entryPosted entry) mentry
-    <*> areq markdownField newCfs (entryContent <$> mentry)
-    <*  bootstrapSubmit (BootstrapSubmit msg "" [])
+required :: FieldView app -> Text
+required fv = case fvRequired fv of
+  True -> "required"
+  False -> "optional"
+
+entryForm :: RenderMessage App msg => msg -> Maybe (Entity Entry) -> Html -> MForm Handler (FormResult (Entry, [CategoryId]), Widget)
+entryForm msg mentryEntity extra = do
+  let mentry = entityVal <$> mentryEntity
+  (categories, categoryEntries) <- lift $ runDB $ do
+    categories <- selectList [] [Asc CategoryName]
+    categoryEntries <-
+      mapM (\(Entity entryId _) -> selectList [CategoryEntryEntry ==. entryId] []) mentryEntity
+    return (categories, (map (categoryEntryCategory . entityVal)) <$> categoryEntries)
+  (titleRes, titleView) <- mreq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
+  currentTime <- liftIO getCurrentTime
+  let time = pure $ maybe currentTime entryPosted mentry
+      cfs        = (bfs MsgNewEntryContent) :: FieldSettings App
+      attributes = ("rows", "20") : fsAttrs cfs
+      newCfs     = cfs { fsAttrs = attributes }
+  (contentRes, contentView) <- mreq markdownField newCfs (entryContent <$> mentry)
+  (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
+  (categoriesRes, checkBoxView) <- mreq (checkboxesFieldList $ map categoryCheckBox categories) (bfs MsgNewEntryCategories) categoryEntries
+  let widget = $(widgetFile "edit-entry-form")
+      entryRes = Entry <$> titleRes <*> time <*> contentRes <* submitRes
+  return ((,) <$> entryRes <*> categoriesRes, widget)
+ where
+  categoryCheckBox (Entity categoryId category) =
+    ((categoryName category), categoryId)
 
 getEditEntryR :: EntryId -> Handler Html
 getEditEntryR entryId = do
-  entry <- runDB $ do
-    entry <- get404 entryId
-    return entry
-  (entryWidget, enctype) <- generateFormPost (entryForm MsgSaveEntryChanges $ Just entry)
+  entry <- runDB $ get404 entryId
+  (entryWidget, enctype) <-
+    generateFormPost $ entryForm MsgSaveEntryChanges (Just $ Entity entryId entry)
   defaultLayout $ do
     setTitleI MsgEditEntryTitle
     $(widgetFile "newentry")
 
 postEditEntryR :: EntryId -> Handler Html
 postEditEntryR entryId =  do
-  oldEntry <- runDB $ do
-    oldEntry <- get404 entryId
-    return oldEntry
-  ((res, entryWidget), enctype) <- runFormPost (entryForm MsgSaveEntryChanges $ Just oldEntry)
+  ((res, entryWidget), enctype) <-
+    runFormPost $ entryForm MsgSaveEntryChanges Nothing
   case res of
-    FormSuccess entry -> do
-      runDB $ replace entryId entry
+    FormSuccess (entry, categories) -> do
+      runDB $ do
+        deleteWhere [CategoryEntryEntry ==. entryId]
+        replace entryId entry
+        mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId))
+              categories
       setMessageI $ MsgEntryEdited $ entryTitle entry
       redirect $ EntryR entryId
     _ -> defaultLayout $ do

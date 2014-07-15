@@ -1,0 +1,4 @@
+#{extra}
+<p>
+  _{MsgReallyDeleteCategory (categoryName category)}
+  ^{fvInput submitView}

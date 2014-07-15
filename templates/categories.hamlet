@@ -1,0 +1,13 @@
+<h1>_{MsgCategoriesHeader}
+$if null categories
+  <p>_{MsgNoCategories}
+$else
+  $forall Entity categoryId category <- categories
+    <p>
+      #{categoryName category}
+      <span class="btn-group btn-group-xs">
+        <a type="button" class="btn btn-default" href=@{EditCategoryR categoryId}>_{MsgEditCategory}
+        <a type="button" class="btn btn-default" href=@{DeleteCategoryR categoryId}>_{MsgDeleteCategory}
+<h2>_{MsgAddCategoryHeader}
+<form .form-horizontal role=form method=post action=@{CategoriesR} enctype=#{enctype}>
+  ^{newCategoryWidget}

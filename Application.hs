@@ -21,7 +21,6 @@ import Control.Monad.Logger (runLoggingT)
 import Control.Concurrent (forkIO, threadDelay)
 import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize, flushLogStr)
 import Network.Wai.Logger (clockDateCacher)
-import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
 
 -- Import all relevant handler modules here.
@@ -34,6 +33,9 @@ import Handler.NewEntry
 import Handler.DeleteEntry
 import Handler.DeleteComment
 import Handler.Feed
+import Handler.Categories
+import Handler.DeleteCategory
+import Handler.EditCategory
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the

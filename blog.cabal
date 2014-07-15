@@ -28,6 +28,9 @@ library
                      Handler.DeleteEntry
                      Handler.DeleteComment
                      Handler.Feed
+                     Handler.Categories
+                     Handler.DeleteCategory
+                     Handler.EditCategory
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

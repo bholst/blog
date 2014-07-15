@@ -21,8 +21,7 @@ getDeleteCommentR commentId = do
 
 postDeleteCommentR :: CommentId -> Handler Html
 postDeleteCommentR commentId = do
-  ((res, _), _) <-
-    runFormPost deleteForm
+  ((res, _), _) <- runFormPost deleteForm
   comment <- runDB $ get404 commentId
   case res of
     FormSuccess _ -> do

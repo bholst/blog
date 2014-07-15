@@ -5,18 +5,27 @@ import Yesod.Feed
 import Yesod.RssFeed (rssFeed, RepRss)
 import Yesod.AtomFeed (atomFeed, RepAtom)
 import Data.Time.Clock
+import Handler.Blog (getEntries, getEntriesByCategory)
 
 getRssFeedR :: Handler RepRss
-getRssFeedR = getFeed RssFeedR >>= rssFeed
+getRssFeedR = (map fst) <$> getEntries >>= getFeed RssFeedR >>= rssFeed
 
 getAtomFeedR :: Handler RepAtom
-getAtomFeedR = getFeed AtomFeedR >>= atomFeed
+getAtomFeedR = (map fst) <$> getEntries >>= getFeed AtomFeedR >>= atomFeed
 
-getFeed :: Route (HandlerSite Handler) -> Handler (Feed (Route (HandlerSite Handler)))
-getFeed feed = do
-    entries <- runDB $ do
-      entries <- selectList [] [Desc EntryPosted]
-      return $ map entry2FeedEntry entries
+getCategoryRssFeedR :: CategoryId -> Handler RepRss
+getCategoryRssFeedR categoryId =
+  (map fst) <$> (getEntriesByCategory categoryId)
+  >>= getFeed RssFeedR >>= rssFeed
+
+getCategoryAtomFeedR :: CategoryId -> Handler RepAtom
+getCategoryAtomFeedR categoryId =
+  (map fst) <$> (getEntriesByCategory categoryId)
+  >>= getFeed AtomFeedR >>= atomFeed
+
+getFeed :: Route (HandlerSite Handler) -> [Entity Entry] -> Handler (Feed (Route (HandlerSite Handler)))
+getFeed feed blogEntries = do
+    let entries = map entry2FeedEntry blogEntries
     extra <- getExtra
     let title  = extraPagename extra
         author = extraAuthor   extra

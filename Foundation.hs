@@ -1,7 +1,7 @@
 module Foundation where
 
 import Prelude
-import Data.Text
+import Data.Text hiding (null)
 import Yesod
 import Yesod.Static
 import Yesod.Auth
@@ -76,6 +76,8 @@ instance Yesod App where
         extra <- getExtra
         let pagename = extraPagename extra
 
+        categories <- runDB $ selectList [] [Asc CategoryName]
+
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final
@@ -147,16 +149,35 @@ instance Yesod App where
             if commentAuthor == userId
               then return Authorized
               else unauthorizedI MsgAdminAndAuthorAuthorizedDeleteComment
+    isAuthorized BlogR                 _ = allAuthorized
+    isAuthorized (EntryR _)            _ = allAuthorized
+    isAuthorized CategoriesR           _ = adminAuthorized
+    isAuthorized (EditCategoryR   _)   _ = adminAuthorized
+    isAuthorized (DeleteCategoryR _)   _ = adminAuthorized
+    isAuthorized (StaticR _)           _ = allAuthorized
+    isAuthorized (AuthR _)             _ = allAuthorized
+    isAuthorized FaviconR              _ = allAuthorized
+    isAuthorized RobotsR               _ = allAuthorized
+    isAuthorized HomeR                 _ = allAuthorized
+    isAuthorized RssFeedR              _ = allAuthorized
+    isAuthorized AtomFeedR             _ = allAuthorized
+    isAuthorized (CategoryR _)         _ = allAuthorized
+    isAuthorized (CategoryRssFeedR _)  _ = allAuthorized
+    isAuthorized (CategoryAtomFeedR _) _ = allAuthorized
+--     isAuthorized _ _ = do
+--         return Authorized
 
-    isAuthorized _ _ = do
-        return Authorized
+allAuthorized :: Monad m => m AuthResult
+allAuthorized = return Authorized
 
+allUsersAuthorized :: Handler AuthResult
 allUsersAuthorized = do
     mauth <- maybeAuth
     case mauth of
         Nothing -> return AuthenticationRequired
         Just _  -> return Authorized
 
+adminAuthorized :: Handler AuthResult
 adminAuthorized = do
     mauth <- maybeAuth
     case mauth of

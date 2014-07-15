@@ -14,3 +14,9 @@
 /blog/comment/#CommentId/delete DeleteCommentR GET POST
 /blog/rss RssFeedR GET
 /blog/atom AtomFeedR GET
+/blog/categories CategoriesR GET POST
+/blog/category/#CategoryId CategoryR GET
+/blog/category/#CategoryId/rss CategoryRssFeedR GET
+/blog/category/#CategoryId/atom CategoryAtomFeedR GET
+/blog/category/#CategoryId/delete DeleteCategoryR GET POST
+/blog/category/#CategoryId/edit EditCategoryR GET POST
