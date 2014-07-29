@@ -17,7 +17,7 @@ postCategoriesR = do
   ((res, newCategoryWidget), enctype) <- runFormPost (categoryForm MsgNewCategorySubmit Nothing)
   case res of
     FormSuccess category -> do
-      runDB $ insert category
+      _ <- runDB $ insert category
       setMessageI $ MsgCategoryAdded $ categoryName category
       redirect CategoriesR
     _ -> do
