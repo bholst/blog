@@ -33,18 +33,23 @@ During the first installation, which may take some time, you can start to
 configure your application. Change into the config directory `cd config` and
 copy the configuration samples.
 
-`cp settings.yml.sample settings.yml`  
-`cp postgresql.yml.sample postgresql.yml`
+```
+cp settings.yml.sample settings.yml
+cp postgresql.yml.sample postgresql.yml
+```
 
 Configure the settings as you prefer. Most important is to create a new
 database user and the new database (replace $username with the actual username
-and $dbname with the actual database name):  
-`$ su`  
-`# su postgresql`  
-`# createuser $username -P`  
-`# psql`  
-`postgres=# CREATE DATABASE $dbname OWNER $username;`  
-`postgres=# \q`
+and $dbname with the actual database name):
+
+```
+$ su
+# su postgresql
+# createuser $username -P
+# psql
+postgres=# CREATE DATABASE $dbname OWNER $username;
+postgres=# \q
+```
 
 By default, postgreSQL is not configured to login via password in many 
 Linux Distributions. Instead, you are able to login with the current UNIX user.
