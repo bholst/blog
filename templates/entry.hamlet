@@ -1,13 +1,13 @@
 <div>
-  <h1 class="alignleft">#{entryTitle entry}
+  <h1 .alignleft>#{entryTitle entry}
   $maybe Entity _ user <- muser
     $if isAdmin user
-        <div class="btn-group btn-group-sm" class="alignright">
-          <a type="button" class="btn btn-default"  href=@{EditEntryR entryId}>_{MsgEditEntry}
-          <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              <span class="caret">
-            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <div .btn-group .btn-group-sm .alignright>
+          <a type=button .btn .btn-default  href=@{EditEntryR entryId}>_{MsgEditEntry}
+          <div .btn-group .btn-group-sm>
+            <button type=button .btn .btn-default .dropdown-toggle data-toggle=dropdown>
+              <span .caret>
+            <ul .dropdown-menu .dropdown-menu-right role=menu>
               <li>
                 <a href=@{EditEntryR entryId}>_{MsgEditEntry}
               <li>

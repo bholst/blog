@@ -1,4 +1,4 @@
-<div class="alert alert-warning" role="alert">
+<div .alert .alert-warning role=alert>
   _{MsgJustPreviewWarning}
 
 <h1>#{entryTitle newentry}
