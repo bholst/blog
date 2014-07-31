@@ -4,23 +4,25 @@ module Handler.EditEntry
   , entryForm )
 where
 
-import Import hiding (mapM)
+import Import
 import Data.Time.Clock
-import Data.Traversable (mapM)
 
 required :: FieldView app -> Text
 required fv = case fvRequired fv of
   True -> "required"
   False -> "optional"
 
-entryForm :: RenderMessage App msg => msg -> Maybe (Entity Entry) -> Html -> MForm Handler (FormResult (Entry, [CategoryId]), Widget)
+entryForm :: RenderMessage App msg => msg -> Maybe (Entity Entry) -> Html -> MForm Handler (FormResult (Entry, Maybe [CategoryId]), Widget)
 entryForm msg mentryEntity extra = do
   let mentry = entityVal <$> mentryEntity
   (categories, categoryEntries) <- lift $ runDB $ do
     categories <- selectList [] [Asc CategoryName]
-    categoryEntries <-
-      mapM (\(Entity entryId _) -> selectList [CategoryEntryEntry ==. entryId] []) mentryEntity
-    return (categories, (map (categoryEntryCategory . entityVal)) <$> categoryEntries)
+    case mentryEntity of
+      Just (Entity entryId _) -> do
+        categoryEntries <- selectList [CategoryEntryEntry ==. entryId] []
+        return (categories, Just $ Just (map (categoryEntryCategory . entityVal) categoryEntries))
+      Nothing ->
+        return (categories, Nothing)
   (titleRes, titleView) <- mreq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
   currentTime <- liftIO getCurrentTime
   let time = pure $ maybe currentTime entryPosted mentry
@@ -29,11 +31,12 @@ entryForm msg mentryEntity extra = do
       newCfs     = cfs { fsAttrs = attributes }
   (contentRes, contentView) <- mreq markdownField newCfs (entryContent <$> mentry)
   (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
-  (categoriesRes, checkBoxView) <- mreq (checkboxesFieldList $ map categoryCheckBox categories) (bfs MsgNewEntryCategories) categoryEntries
+  (categoriesRes, checkBoxView) <- mopt (checkboxesFieldList $ map categoryCheckBox categories) (bfs MsgNewEntryCategories) categoryEntries
   let widget = $(widgetFile "edit-entry-form")
       entryRes = Entry <$> titleRes <*> time <*> contentRes <* submitRes
   return ((,) <$> entryRes <*> categoriesRes, widget)
  where
+  categoryCheckBox :: Entity Category -> (Text, CategoryId)
   categoryCheckBox (Entity categoryId category) =
     ((categoryName category), categoryId)
 
@@ -51,12 +54,15 @@ postEditEntryR entryId =  do
   ((res, entryWidget), enctype) <-
     runFormPost $ entryForm MsgSaveEntryChanges Nothing
   case res of
-    FormSuccess (entry, categories) -> do
+    FormSuccess (entry, mcategories) -> do
       runDB $ do
         deleteWhere [CategoryEntryEntry ==. entryId]
         replace entryId entry
-        mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId))
-              categories
+        case mcategories of
+          Just categories ->
+            mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId)) categories
+          Nothing ->
+            return ()
       setMessageI $ MsgEntryEdited $ entryTitle entry
       redirect $ EntryR entryId
     _ -> defaultLayout $ do

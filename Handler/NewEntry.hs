@@ -19,14 +19,21 @@ postNewEntryR = do
   ((res, entryWidget), enctype) <-
     runFormPost $ entryForm MsgNewEntry Nothing
   case res of
-    FormSuccess (entry, categories) -> do
+    FormSuccess (entry, mcategories) -> do
       entryId <- runDB $ do
         entryId <- insert entry
-        mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId))
-              categories
+        case mcategories of
+          Just categories ->
+            mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId))
+                  categories
+          Nothing -> return ()
         return entryId
       setMessageI $ MsgEntryCreated $ entryTitle entry
       redirect $ EntryR entryId
-    _ -> defaultLayout $ do
+    failure -> defaultLayout $ do
+      case failure of
+        FormFailure texts -> setMessage $ toHtml $ show texts
+        FormMissing -> setMessage $ toHtml ("FormMissing" :: Text)
+        _  -> setMessage $ toHtml ("Other error" :: Text)
       setTitleI MsgPleaseCorrectEntry
       $(widgetFile "newentry")
