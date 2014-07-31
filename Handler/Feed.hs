@@ -32,7 +32,7 @@ getFeed feed blogEntries = do
         language = "en"
     updated <- case entries of
                  [] -> liftIO $ getCurrentTime
-                 _  -> return $ foldl1 max (map feedEntryUpdated entries)
+                 _  -> return $ foldl1 max (map (entryUpdated . entityVal) blogEntries)
     return $ Feed title feed BlogR author (toHtml ("" :: Text)) language updated entries
  where
   entry2FeedEntry (Entity entryId entry) =

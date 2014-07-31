@@ -25,7 +25,8 @@ entryForm msg mentryEntity extra = do
         return (categories, Nothing)
   (titleRes, titleView) <- mreq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
   currentTime <- liftIO getCurrentTime
-  let time = pure $ maybe currentTime entryPosted mentry
+  let postedTime  = pure $ maybe currentTime entryPosted mentry
+      updatedTime = pure currentTime
       cfs        = (bfs MsgNewEntryContent) :: FieldSettings App
       attributes = ("rows", "20") : fsAttrs cfs
       newCfs     = cfs { fsAttrs = attributes }
@@ -33,7 +34,7 @@ entryForm msg mentryEntity extra = do
   (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
   (categoriesRes, checkBoxView) <- mopt (checkboxesFieldList $ map categoryCheckBox categories) (bfs MsgNewEntryCategories) categoryEntries
   let widget = $(widgetFile "edit-entry-form")
-      entryRes = Entry <$> titleRes <*> time <*> contentRes <* submitRes
+      entryRes = Entry <$> titleRes <*> postedTime <*> updatedTime <*> contentRes <* submitRes
   return ((,) <$> entryRes <*> categoriesRes, widget)
  where
   categoryCheckBox :: Entity Category -> (Text, CategoryId)
