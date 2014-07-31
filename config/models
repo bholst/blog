@@ -12,7 +12,7 @@ Email
 Entry
     title Text
     posted UTCTime
-    updated UTCTime "default=now() at time zone 'utc'"
+    updated UTCTime "default=(now() at time zone 'utc')"
     content Markdown
 Category
     name Text
