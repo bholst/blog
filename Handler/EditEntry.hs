@@ -51,20 +51,28 @@ getEditEntryR entryId = do
 
 postEditEntryR :: EntryId -> Handler Html
 postEditEntryR entryId =  do
+  entry <- runDB $ get404 entryId
   ((res, entryWidget), enctype) <-
-    runFormPost $ entryForm MsgSaveEntryChanges Nothing
+    runFormPost $ entryForm MsgSaveEntryChanges (Just $ Entity entryId entry)
+  isPreview <- runInputPost $ iopt boolField "preview"
   case res of
-    FormSuccess (entry, mcategories) -> do
-      runDB $ do
-        deleteWhere [CategoryEntryEntry ==. entryId]
-        replace entryId entry
-        case mcategories of
-          Just categories ->
-            mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId)) categories
-          Nothing ->
-            return ()
-      setMessageI $ MsgEntryEdited $ entryTitle entry
-      redirect $ EntryR entryId
+    FormSuccess (newentry, mcategories) ->
+      case isPreview of
+        Just True ->
+          defaultLayout $ do
+            setTitleI MsgEditEntryTitle
+            $(widgetFile "previewentry")
+        _ -> do
+          runDB $ do
+            deleteWhere [CategoryEntryEntry ==. entryId]
+            replace entryId newentry
+            case mcategories of
+              Just categories ->
+                mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId)) categories
+              Nothing ->
+                return ()
+          setMessageI $ MsgEntryEdited $ entryTitle newentry
+          redirect $ EntryR entryId
     _ -> defaultLayout $ do
       setTitleI MsgPleaseCorrectEntry
       $(widgetFile "newentry")

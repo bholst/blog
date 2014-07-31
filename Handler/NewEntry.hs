@@ -18,18 +18,25 @@ postNewEntryR :: Handler Html
 postNewEntryR = do
   ((res, entryWidget), enctype) <-
     runFormPost $ entryForm MsgNewEntry Nothing
+  isPreview <- runInputPost $ iopt boolField "preview"
   case res of
-    FormSuccess (entry, mcategories) -> do
-      entryId <- runDB $ do
-        entryId <- insert entry
-        case mcategories of
-          Just categories ->
-            mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId))
-                  categories
-          Nothing -> return ()
-        return entryId
-      setMessageI $ MsgEntryCreated $ entryTitle entry
-      redirect $ EntryR entryId
+    FormSuccess (newentry, mcategories) ->
+      case isPreview of
+        Just True ->
+          defaultLayout $ do
+            setTitleI MsgNewEntryTitle
+            $(widgetFile "previewentry")
+        _ -> do
+          entryId <- runDB $ do
+            entryId <- insert newentry
+            case mcategories of
+              Just categories ->
+                mapM_ (\categoryId -> insert (CategoryEntry entryId categoryId))
+                      categories
+              Nothing -> return ()
+            return entryId
+          setMessageI $ MsgEntryCreated $ entryTitle newentry
+          redirect $ EntryR entryId
     failure -> defaultLayout $ do
       case failure of
         FormFailure texts -> setMessage $ toHtml $ show texts

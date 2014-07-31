@@ -29,6 +29,8 @@ NewEntryTitle: Title
 EditEntryTitle: Edit Entry
 NewEntryContent: Content
 NewEntryCategories: Categories
+PreviewButton: Preview
+JustPreviewWarning: This is just a preview!
 
 PleaseCorrectEntry: Your submitted entry had some errors, please correct and try again.
 EntryCreated title@Text: Your new blog post, #{title}, has been created.

@@ -12,3 +12,4 @@
   <div class="#{required submitView}">
     <label for="#{fvId submitView}">#{fvLabel submitView}
     ^{fvInput submitView}
+    <button type="submit" class="btn" name="preview" value="true">_{MsgPreviewButton}
