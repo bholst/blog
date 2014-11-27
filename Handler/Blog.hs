@@ -8,9 +8,9 @@ where
 import Import
 import qualified Data.Conduit.List as CL
 import Data.Conduit
+import Database.Persist.Sql (SqlPersistT)
 import Yesod.RssFeed (rssLink)
 import Yesod.AtomFeed (atomLink)
-import Database.Persist.Sql (SqlBackend)
 
 getEntries :: Handler [(Entity Entry, Int)]
 getEntries = runDB $
@@ -52,8 +52,8 @@ getCategoryR categoryId = do
     atomLink (CategoryAtomFeedR categoryId) (mr name)
     $(widgetFile "blog")
 
-countComments :: (PersistQuery m, PersistMonadBackend m ~ SqlBackend) =>
-                 Conduit (Entity Entry) m (Entity Entry, Int)
+countComments :: (MonadIO m) =>
+                 Conduit (Entity Entry) (SqlPersistT m) (Entity Entry, Int)
 countComments = awaitForever (\entity -> do
-  commentCount <- count [CommentEntry ==. (entityKey entity)]
+  commentCount <- lift $ count [CommentEntry ==. (entityKey entity)]
   yield (entity, commentCount))
