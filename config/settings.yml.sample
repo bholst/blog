@@ -6,6 +6,7 @@ Default: &defaults
   pagename: Pagename
   author: Authorname
   admin: user@example.com
+  enable_comments: True
   #analytics: UA-YOURCODE
 
 Development:

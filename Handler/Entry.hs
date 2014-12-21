@@ -42,13 +42,20 @@ getEntryR entryId = do
 
 postEntryR :: EntryId -> Handler Html
 postEntryR entryId = do
-    ((res, commentWidget), enctype) <-
-        runFormPost (commentForm entryId)
-    case res of
-        FormSuccess comment -> do
-            _ <- runDB $ insert comment
-            setMessageI MsgCommentAdded
-            redirect $ EntryR entryId
-        _ -> defaultLayout $ do
-            setTitleI MsgPleaseCorrectComment
-            $(widgetFile "newcomment")
+    extra <- getExtra
+    if extraEnableComments extra
+      then do
+        ((res, commentWidget), enctype) <-
+            runFormPost (commentForm entryId)
+        case res of
+            FormSuccess comment -> do
+                _ <- runDB $ insert comment
+                setMessageI MsgCommentAdded
+                redirect $ EntryR entryId
+            _ -> defaultLayout $ do
+                setTitleI MsgPleaseCorrectComment
+                $(widgetFile "newcomment")
+      else
+        defaultLayout $ do
+	  setMessageI MsgCommentsDisabled
+	  redirect $ EntryR entryId

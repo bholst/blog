@@ -15,23 +15,26 @@
 <div style="clear: both;">
 <article>#{entryContent entry}
     <section .comments>
-        <h1>_{MsgCommentsHeading}
+        $if (not $ null comments) || extraEnableComments extra
+            <h1>_{MsgCommentsHeading}
 
-        $if null comments
-            <p>_{MsgNoComments}
-        $else
-            $forall Entity commentId (Comment _entry posted commentUser name text) <- comments
-                <div .comment>
-                    <span .by>#{name}
-                    <span .at>#{show posted}
-                    $if canDeleteCommentBy muser commentUser
-                        <a href=@{DeleteCommentR commentId}>_{MsgDeleteComment}
-                    <div .content>#{text}
-        <section>
-            <h1>_{MsgAddCommentHeading}
-            $maybe (commentWidget, enctype) <- mCommentWidget
-                <form .form-horizontal role=form method=post enctype=#{enctype}>
-                    ^{commentWidget}
-            $nothing
-                <p>
-                    <a href=@{AuthR LoginR}>_{MsgLoginToComment}
+            $if null comments
+                $if extraEnableComments extra
+                    <p>_{MsgNoComments}
+            $else
+                $forall Entity commentId (Comment _entry posted commentUser name text) <- comments
+                    <div .comment>
+                        <span .by>#{name}
+                        <span .at>#{show posted}
+                        $if canDeleteCommentBy muser commentUser
+                            <a href=@{DeleteCommentR commentId}>_{MsgDeleteComment}
+                        <div .content>#{text}
+            $if extraEnableComments extra
+                <section>
+                    <h1>_{MsgAddCommentHeading}
+                $maybe (commentWidget, enctype) <- mCommentWidget
+                    <form .form-horizontal role=form method=post enctype=#{enctype}>
+                        ^{commentWidget}
+                $nothing
+                    <p>
+                        <a href=@{AuthR LoginR}>_{MsgLoginToComment}

@@ -51,6 +51,7 @@ CommentName: Ihr Anzeigename
 CommentText: Kommentar
 CommentAdded: Ihr Kommtar wurde gespeichert
 PleaseCorrectComment: Ihr eingebener Kommentar hatte Fehler. Bitte korrigieren Sie diese und versuchen Sie es erneut.
+CommentsDisabled: Kommentare sind deaktiviert.
 
 CategoriesHeader: Kategorien
 AddCategoryHeader: Kategorie hinzufügen

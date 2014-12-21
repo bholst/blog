@@ -5,9 +5,10 @@ $else
     <a href=@{EntryR entryId}>
       <h1>#{entryTitle entry}
     <article>#{entryContent entry}
-    <p>
-      <a href=@{EntryR entryId}>
-        $if comments == 0
-          _{MsgFirstToComment}
-        $else
-          _{MsgNumberOfComments comments}
+    $if extraEnableComments extra
+      <p>
+        <a href=@{EntryR entryId}>
+          $if comments == 0
+            _{MsgFirstToComment}
+          $else
+            _{MsgNumberOfComments comments}

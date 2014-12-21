@@ -51,6 +51,7 @@ CommentName: Your display name
 CommentText: Comment
 CommentAdded: Your comment has been added
 PleaseCorrectComment: Your submitted comment had some errors, please correct and try again.
+CommentsDisabled: Comments are disabled.
 
 CategoriesHeader: Categories
 AddCategoryHeader: Add Category
