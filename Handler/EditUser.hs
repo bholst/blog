@@ -10,22 +10,36 @@ userForm :: RenderMessage App msg =>
          -> MForm Handler (FormResult User, Widget)
 userForm msg userId user extra = do
   mauth <- lift maybeAuth
-  let adminFieldSettingsBase = bfs MsgIsAdmin :: FieldSettings App
-      adminFieldSettings =
+  let ownPage =
         case mauth of
-          Just (Entity authId _) | authId == userId ->
+          Just (Entity authId _) | authId == userId -> True
+          _ -> False
+      adminFieldSettingsBase = bfs MsgIsAdmin :: FieldSettings App
+      adminFieldSettings =
+        if ownPage
+          then
             adminFieldSettingsBase
             { fsAttrs = ("disabled", "") : (fsAttrs adminFieldSettingsBase) }
-          _ ->
+          else
             adminFieldSettingsBase
-  (adminRes, adminView) <- mreq checkBoxField adminFieldSettings (Just $ userAdmin user)
+  (adminRes, adminView) <- mopt checkBoxField adminFieldSettings (Just $ Just $ userAdmin user)
   (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
+  liftIO $ putStrLn $ "Admin: " ++ show adminRes
   let widget = $(widgetFile "edit-user-form")
-      userRes = mkUser <$> adminRes
+      adminResCorrect =
+        if ownPage
+          then
+            pure $ Just $ userAdmin user
+          else
+            adminRes
+      userRes = mkUser <$> adminResCorrect
   return (userRes, widget)
   where
-    mkUser :: Bool -> User
-    mkUser admin = user { userAdmin = admin }
+    mkUser :: Maybe Bool -> User
+    mkUser Nothing =
+      user
+    mkUser (Just admin) =
+      user { userAdmin = admin }
 
 getEditUserR :: UserId -> Handler Html
 getEditUserR userId = do
