@@ -32,3 +32,8 @@ infixr 5 <>
 (<>) :: Monoid m => m -> m -> m
 (<>) = mappend
 #endif
+
+required :: FieldView app -> Text
+required fv = case fvRequired fv of
+  True -> "required"
+  False -> "optional"

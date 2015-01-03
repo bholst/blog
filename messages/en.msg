@@ -5,6 +5,7 @@ Login: Login
 Logout: Logout
 NewEntry: New Entry
 Categories: Categories
+Users: Users
 
 BlogTitle: Blog
 NoEntries: There are no entries in the blog.
@@ -74,3 +75,15 @@ EditCategorySubmit: Save
 EditCategoryTitle name@Text: Edit category #{name}
 CategoryEdited name@Text: Category #{name} successfully edited
 PleaseCorrectCategory: Your submitted category had some errors, please correct and try again.
+
+UsersTitle: Users
+NoUsers: There are no users, yet.
+UsersHeader: Users
+EditUser: Bearbeiten
+
+EditUserSubmit: Save User
+EditUserTitle ident@Text: Edit User #{ident}
+EditUserHeader ident@Text: Edit User #{ident}
+UserEdited ident@Text: User #{ident} successfully edited
+PleaseCorrectUser: Your submitted user had some errors, please correct and try again.
+IsAdmin: Admin

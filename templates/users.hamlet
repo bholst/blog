@@ -1,0 +1,9 @@
+<h1>_{MsgUsersHeader}
+$if null users
+  <p>_{MsgNoUsers}
+$else
+  $forall Entity userId user <- users
+    <p>
+      #{userIdent user}
+      <span .btn-group .btn-group-xs>
+        <a type=button .btn .btn-default href=@{EditUserR userId}>_{MsgEditUser}

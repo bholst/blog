@@ -1,0 +1,3 @@
+<h1>_{MsgEditUserHeader $ userIdent user}
+<form .form-horizontal role=form method=post action=@{EditUserR userId} enctype=#{enctype}>
+  ^{formWidget}

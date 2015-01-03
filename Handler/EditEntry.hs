@@ -7,11 +7,6 @@ where
 import Import
 import Data.Time.Clock
 
-required :: FieldView app -> Text
-required fv = case fvRequired fv of
-  True -> "required"
-  False -> "optional"
-
 entryForm :: RenderMessage App msg => msg -> Maybe (Entity Entry) -> Html -> MForm Handler (FormResult (Entry, Maybe [CategoryId]), Widget)
 entryForm msg mentryEntity extra = do
   let mentry = entityVal <$> mentryEntity

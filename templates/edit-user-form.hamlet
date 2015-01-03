@@ -1,0 +1,7 @@
+#{extra}
+  <div class="#{required adminView}">
+    <label for="#{fvId adminView}">#{fvLabel adminView}
+    ^{fvInput adminView}
+  <div class="#{required submitView}">
+    <label for="#{fvId submitView}">#{fvLabel submitView}
+    ^{fvInput submitView}

@@ -154,6 +154,8 @@ instance Yesod App where
     isAuthorized CategoriesR           _ = adminAuthorized
     isAuthorized (EditCategoryR   _)   _ = adminAuthorized
     isAuthorized (DeleteCategoryR _)   _ = adminAuthorized
+    isAuthorized UsersR                _ = adminAuthorized
+    isAuthorized (EditUserR _)         _ = adminAuthorized
     isAuthorized (StaticR _)           _ = allAuthorized
     isAuthorized (AuthR _)             _ = allAuthorized
     isAuthorized FaviconR              _ = allAuthorized

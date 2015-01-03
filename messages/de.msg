@@ -5,6 +5,7 @@ Login: Anmelden
 Logout: Abmelden
 NewEntry: Neuer Eintrag
 Categories: Kategorien
+Users: Benutzer
 
 BlogTitle: Blog
 NoEntries: Es gibt leider keinen Eintrag.
@@ -74,3 +75,15 @@ EditCategorySubmit: Speichern
 EditCategoryTitle name@Text: Kategorie #{name} bearbeiten
 CategoryEdited name@Text: Kategorie #{name} wurde erfolgreich bearbeitet.
 PleaseCorrectCategory: Ihr eingebene Kategorie hatte Fehler. Bitte korrigieren Sie diese und versuchen Sie es erneut.
+
+UsersTitle: Benutzer
+UsersHeader: Benutzer
+NoUsers: Es gibt noch keine Benutzer.
+EditUser: Bearbeiten
+
+EditUserSubmit: Benutzer speichern
+EditUserTitle ident@Text: Benutzer #{ident} bearbeiten
+EditUserHeader ident@Text: Benutzer #{ident} bearbeiten
+UserEdited ident@Text: Benutzer #{ident} wurde erfolgreich bearbeitet.
+PleaseCorrectUser: Ihr eingegebener Benutzer hatte Fehler. Bitte korrigieren Sie diese und versuchen Sie es erneut.
+IsAdmin: Administrator

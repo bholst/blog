@@ -20,3 +20,5 @@
 /blog/category/#CategoryId/atom CategoryAtomFeedR GET
 /blog/category/#CategoryId/delete DeleteCategoryR GET POST
 /blog/category/#CategoryId/edit EditCategoryR GET POST
+/users UsersR GET
+/user/#UserId/edit EditUserR GET POST

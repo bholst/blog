@@ -32,6 +32,8 @@ library
                      Handler.Categories
                      Handler.DeleteCategory
                      Handler.EditCategory
+                     Handler.Users
+                     Handler.EditUser
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
