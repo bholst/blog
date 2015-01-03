@@ -1,6 +1,7 @@
 module Handler.Entry where
 
 import Import
+import qualified Data.Text as Text
 import Data.Time.Clock
 
 commentForm :: EntryId -> Form Comment

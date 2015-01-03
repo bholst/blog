@@ -13,7 +13,11 @@
               <li>
                 <a href=@{DeleteEntryR entryId}>_{MsgDeleteEntry}
 <div style="clear: both;">
-<article>#{entryContent entry}
+<article>
+    $if not (Text.null (entrySummary entry))
+      <p .summary>
+        #{entrySummary entry}
+    #{entryContent entry}
     <section .comments>
         $if (not $ null comments) || extraEnableComments extra
             <h1>_{MsgCommentsHeading}

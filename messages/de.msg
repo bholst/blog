@@ -28,12 +28,17 @@ AddCommentButton: Kommantar abgeben
 SaveEntryChanges: Änderungen speichern
 NewEntryTitle: Titel
 EditEntryTitle: Eintrag bearbeiten
+NewEntrySummary: Zusammenfassung
 NewEntryContent: Inhalt
 NewEntryCategories: Kategorien
 PreviewButton: Vorschau
 JustPreviewWarning: Dies ist nur eine Vorschau!
+SummaryTooLong length@Int: Die Zusammenfassung ist zu lang. Es sind nur #{show length} Zeichen erlaubt.
 
-PleaseCorrectEntry: Der Eingegeben Beitrag hatte leider Fehler, bitte beheben Sie diese und versuchen sie es erneut.
+PleaseCorrectEntry: Der Eingegeben Beitrag hatte folgende Fehler:
+PleaseCorrectEntryTitle: Bitte den Beitrag korrigieren
+FormMissing: Formulardaten fehlen. Bitte erneut versuchen.
+FormMissingTitle: Formulardaten fehlen.
 EntryCreated title@Text: Ihr neuer Eintrag, #{title}, wurde erstellt.
 EntryEdited title@Text: Ihr Eintrag, #{title}, wurde aktualisiert.
 

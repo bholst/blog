@@ -4,7 +4,7 @@ module Handler.NewEntry
 where
 
 import Import
-import Handler.EditEntry (entryForm)
+import Handler.EditEntry (entryForm, setErrorMessage)
 
 getNewEntryR :: Handler Html
 getNewEntryR = do
@@ -37,10 +37,13 @@ postNewEntryR = do
             return entryId
           setMessageI $ MsgEntryCreated $ entryTitle newentry
           redirect $ EntryR entryId
-    failure -> defaultLayout $ do
-      case failure of
-        FormFailure texts -> setMessage $ toHtml $ show texts
-        FormMissing -> setMessage $ toHtml ("FormMissing" :: Text)
-        _  -> setMessage $ toHtml ("Other error" :: Text)
-      setTitleI MsgPleaseCorrectEntry
-      $(widgetFile "newentry")
+    FormFailure texts -> do
+      setErrorMessage texts
+      defaultLayout $ do
+        setTitleI MsgPleaseCorrectEntryTitle
+        $(widgetFile "newentry")
+    FormMissing -> do
+      setMessageI $ MsgFormMissing
+      defaultLayout $ do
+        setTitleI MsgFormMissingTitle
+        $(widgetFile "newentry")

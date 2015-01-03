@@ -1,11 +1,15 @@
 module Handler.EditEntry
   ( getEditEntryR
   , postEditEntryR
-  , entryForm )
+  , entryForm
+  , setErrorMessage )
 where
 
 import Import
+import qualified Data.List as List
+import qualified Data.Text as Text
 import Data.Time.Clock
+import qualified Text.Blaze.Html5 as Html
 
 entryForm :: RenderMessage App msg => msg -> Maybe (Entity Entry) -> Html -> MForm Handler (FormResult (Entry, Maybe [CategoryId]), Widget)
 entryForm msg mentryEntity extra = do
@@ -20,6 +24,17 @@ entryForm msg mentryEntity extra = do
         return (categories, Nothing)
   (titleRes, titleView) <- mreq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
   currentTime <- liftIO getCurrentTime
+  extraSettings <- lift getExtra
+  let maybeMaxLength = summaryMaxLength extraSettings
+      validateSummary summary =
+        case maybeMaxLength of
+          Just maxLength
+            | Text.length summary > maxLength ->
+              Left (MsgSummaryTooLong maxLength)
+          _ -> Right summary
+      summaryField =
+        check validateSummary textField
+  (summaryRes, summaryView) <- mreq summaryField (bfs MsgNewEntrySummary) (entrySummary <$> mentry)
   let postedTime  = pure $ maybe currentTime entryPosted mentry
       updatedTime = pure currentTime
       cfs        = (bfs MsgNewEntryContent) :: FieldSettings App
@@ -29,7 +44,7 @@ entryForm msg mentryEntity extra = do
   (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
   (categoriesRes, checkBoxView) <- mopt (checkboxesFieldList $ map categoryCheckBox categories) (bfs MsgNewEntryCategories) categoryEntries
   let widget = $(widgetFile "edit-entry-form")
-      entryRes = Entry <$> titleRes <*> postedTime <*> updatedTime <*> contentRes <* submitRes
+      entryRes = Entry <$> titleRes <*> postedTime <*> updatedTime <*> summaryRes <*> contentRes <* submitRes
   return ((,) <$> entryRes <*> categoriesRes, widget)
  where
   categoryCheckBox :: Entity Category -> (Text, CategoryId)
@@ -69,6 +84,19 @@ postEditEntryR entryId =  do
                 return ()
           setMessageI $ MsgEntryEdited $ entryTitle newentry
           redirect $ EntryR entryId
-    _ -> defaultLayout $ do
-      setTitleI MsgPleaseCorrectEntry
-      $(widgetFile "newentry")
+    FormFailure texts -> do
+      setErrorMessage texts
+      defaultLayout $ do
+        setTitleI MsgPleaseCorrectEntryTitle
+        $(widgetFile "newentry")
+    FormMissing -> do
+      setMessageI $ MsgFormMissing
+      defaultLayout $ do
+        setTitleI MsgFormMissingTitle
+        $(widgetFile "newentry")
+
+setErrorMessage :: (RenderMessage App AppMessage) => [Text] -> Handler ()
+setErrorMessage texts = do
+  let errors = Html.ul $ mconcat (map (Html.li . toHtml) texts)
+  mr <- getMessageRender
+  setMessage $ (toHtml $ mr MsgPleaseCorrectEntry) `mappend` errors

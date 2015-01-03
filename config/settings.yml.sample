@@ -7,6 +7,7 @@ Default: &defaults
   author: Authorname
   admin: user@example.com
   enable_comments: True
+  #summary_max_length: 200
   #analytics: UA-YOURCODE
 
 Development:

@@ -3,6 +3,9 @@
   <div class="#{required titleView}">
     <label for="#{fvId titleView}">#{fvLabel titleView}
     ^{fvInput titleView}
+  <div class="#{required summaryView}">
+    <label for="#{fvId summaryView}">#{fvLabel summaryView}
+    ^{fvInput summaryView}
   <div class="#{required contentView}">
     <label for="#{fvId contentView}">#{fvLabel contentView}
     ^{fvInput contentView}

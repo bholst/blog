@@ -13,6 +13,7 @@ Entry
     title Text
     posted UTCTime
     updated UTCTime "default=(now() at time zone 'utc')"
+    summary Text "default=''"
     content Markdown
 Category
     name Text

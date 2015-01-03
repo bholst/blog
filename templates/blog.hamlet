@@ -4,7 +4,11 @@ $else
   $forall (Entity entryId entry, comments) <- entries
     <a href=@{EntryR entryId}>
       <h1>#{entryTitle entry}
-    <article>#{entryContent entry}
+    <article>
+      $if not (Text.null (entrySummary entry))
+        <p .summary>
+          #{entrySummary entry}
+      #{entryContent entry}
     $if extraEnableComments extra
       <p>
         <a href=@{EntryR entryId}>

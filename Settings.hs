@@ -72,6 +72,7 @@ data Extra = Extra
     , extraAuthor         :: Text
     , extraAdmin          :: Text
     , extraEnableComments :: Bool
+    , summaryMaxLength    :: Maybe Int
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
@@ -82,3 +83,4 @@ parseExtra _ o = Extra
     <*> o .:  "author"
     <*> o .:  "admin"
     <*> o .:  "enable_comments"
+    <*> o .:? "summary_max_length"

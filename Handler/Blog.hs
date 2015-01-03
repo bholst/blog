@@ -8,6 +8,7 @@ where
 import Import
 import qualified Data.Conduit.List as CL
 import Data.Conduit
+import qualified Data.Text as Text
 import Database.Persist.Sql (SqlPersistT)
 import Yesod.RssFeed (rssLink)
 import Yesod.AtomFeed (atomLink)

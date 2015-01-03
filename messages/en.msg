@@ -28,12 +28,17 @@ AddCommentButton: Add comment
 SaveEntryChanges: Save Changes
 NewEntryTitle: Title
 EditEntryTitle: Edit Entry
+NewEntrySummary: Summary
 NewEntryContent: Content
 NewEntryCategories: Categories
 PreviewButton: Preview
 JustPreviewWarning: This is just a preview!
+SummaryTooLong length@Int: The summary is too long, only #{show length} characters are allowed.
 
-PleaseCorrectEntry: Your submitted entry had some errors, please correct and try again.
+PleaseCorrectEntry: Your submitted entry had some errors:
+PleaseCorrectEntryTitle: Please Correct the Entry
+FormMissing: Form missing, try again.
+FormMissingTitle: Form Missing
 EntryCreated title@Text: Your new blog post, #{title}, has been created.
 EntryEdited title@Text: Your blog post, #{title}, has been updated.
 
