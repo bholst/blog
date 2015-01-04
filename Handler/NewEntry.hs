@@ -4,6 +4,7 @@ module Handler.NewEntry
 where
 
 import Import
+import qualified Data.Text as Text
 import Handler.EditEntry (entryForm, setErrorMessage)
 
 getNewEntryR :: Handler Html

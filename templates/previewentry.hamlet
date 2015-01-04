@@ -2,6 +2,9 @@
   _{MsgJustPreviewWarning}
 
 <h1>#{entryTitle newentry}
+$if not (Text.null (entrySummary newentry))
+  <p .summary>
+    #{entrySummary newentry}
 <article>#{entryContent newentry}
 
 <form .form-horizontal role=form method=post enctype=#{enctype}>
