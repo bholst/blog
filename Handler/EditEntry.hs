@@ -6,7 +6,6 @@ module Handler.EditEntry
 where
 
 import Import
-import qualified Data.List as List
 import qualified Data.Text as Text
 import Data.Time.Clock
 import qualified Text.Blaze.Html5 as Html
