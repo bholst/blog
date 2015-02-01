@@ -1,6 +1,9 @@
 module Handler.Entry where
 
 import Import
+import Database.Persist.Sql (SqlPersistT)
+import Data.Conduit
+import qualified Data.Conduit.List as CL
 import qualified Data.Text as Text
 import Data.Time.Clock
 
@@ -22,13 +25,29 @@ canDeleteCommentBy muser commentUserId =
         then True
         else currentUserId == commentUserId
 
+entryWidget :: Entry -> [Entity Upload] -> Maybe (Entity User) -> Maybe EntryId -> Maybe (Route App) -> Widget
+entryWidget entry uploads muser mEntryId mLink =
+    let indexedUploads = zip ([0..] :: [Integer]) uploads
+    in $(widgetFile "entry-widget")
+
+getUploads :: EntryId -> SqlPersistT Handler [Entity Upload]
+getUploads entryId =
+    selectSource [EntryUploadEntry ==. entryId] [] $=
+    (awaitForever $
+      \(Entity _ entryUpload) -> do
+        let uploadId = entryUploadUpload entryUpload
+        upload <- lift (get uploadId)
+        yield $ fmap (Entity uploadId) upload) $=
+    CL.catMaybes $$
+    CL.consume
 
 getEntryR :: EntryId -> Handler Html
 getEntryR entryId = do
-    (entry, comments) <- runDB $ do
+    (entry, comments, uploads) <- runDB $ do
         entry <- get404 entryId
         comments <- selectList [CommentEntry ==. entryId] [Asc CommentPosted]
-        return (entry, comments)
+        uploads <- getUploads entryId
+        return (entry, comments, uploads)
     muser <- maybeAuth
     mCommentWidget <-
       case muser of
@@ -39,7 +58,6 @@ getEntryR entryId = do
     defaultLayout $ do
         setTitleI $ MsgEntryTitle pagename $ entryTitle entry
         $(widgetFile "entry")
-
 
 postEntryR :: EntryId -> Handler Html
 postEntryR entryId = do

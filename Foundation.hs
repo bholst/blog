@@ -131,6 +131,9 @@ instance Yesod App where
 
     makeLogger = return . appLogger
 
+    maximumContentLength _ (Just NewUploadR) = Just $ 16 * 1024 * 1024
+    maximumContentLength _ _ = Just $ 2 * 1024 * 1024
+
     isAuthorized BlogR True = adminAuthorized
     isAuthorized (EntryR _) True = allUsersAuthorized
     isAuthorized NewEntryR _ = adminAuthorized
@@ -166,6 +169,9 @@ instance Yesod App where
     isAuthorized (CategoryR _)         _ = allAuthorized
     isAuthorized (CategoryRssFeedR _)  _ = allAuthorized
     isAuthorized (CategoryAtomFeedR _) _ = allAuthorized
+    isAuthorized UploadsR              _ = adminAuthorized
+    isAuthorized NewUploadR            _ = adminAuthorized
+    isAuthorized (UploadR _)           _ = allAuthorized
 --     isAuthorized _ _ = do
 --         return Authorized
 

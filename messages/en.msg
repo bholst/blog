@@ -5,6 +5,7 @@ Login: Login
 Logout: Logout
 NewEntry: New Entry
 Categories: Categories
+Uploads: Uploads
 Users: Users
 
 BlogTitle: Blog
@@ -31,6 +32,7 @@ EditEntryTitle: Edit Entry
 NewEntrySummary: Summary
 NewEntryContent: Content
 NewEntryCategories: Categories
+NewEntryImages: Images
 PreviewButton: Preview
 JustPreviewWarning: This is just a preview!
 SummaryTooLong length@Int: The summary is too long, only #{show length} characters are allowed.
@@ -92,3 +94,14 @@ EditUserHeader ident@Text: Edit User #{ident}
 UserEdited ident@Text: User #{ident} successfully edited
 PleaseCorrectUser: Your submitted user had some errors, please correct and try again.
 IsAdmin: Admin
+
+UploadsTitle pagename@Text: pagename: Uploads
+NoUploads: There are no uploaded files.
+NewUpload: Upload file
+
+NewUploadTitle: Upload new file
+UploadFileDescription: Description
+UploadFileField: File
+UploadFileSubmit: Upload
+FileUploadFailed: File upload failed.
+UploadSaved: File uploaded successfully.

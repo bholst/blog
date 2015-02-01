@@ -1,0 +1,11 @@
+.carousel {
+  border-radius: 6px;
+  overflow: hidden;
+  width: 30em;
+  max-width: 100%;
+}
+
+figure {
+  width: 30em;
+  max-width: 100%;
+}

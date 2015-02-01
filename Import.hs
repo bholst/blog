@@ -4,7 +4,7 @@ module Import
 
 import           Prelude               as Import hiding (head, init, last,
                                                          readFile, tail,
-                                                         writeFile)
+                                                         writeFile, FilePath)
 import           Yesod                 as Import hiding (Route (..))
 
 import           Control.Applicative   as Import (pure, (<$>), (<*>), (<*))

@@ -1,0 +1,14 @@
+<div .btn-group .btn-group-sm .alignright>
+  <a type=button .btn .btn-default  href=@{NewUploadR}>_{MsgNewUpload}
+$if null uploads
+  <p>_{MsgNoUploads}
+$else
+  <div style="clear: both;">
+  <div .container>
+    <div .row .presenter>
+      $forall Entity uploadId upload <- uploads
+        <div .col-md-4>
+          <a href=@{UploadR uploadId} target=_blank>
+            <img src=@{UploadR uploadId}>
+            #{uploadDescription upload}
+

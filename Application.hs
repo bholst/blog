@@ -37,6 +37,9 @@ import Handler.Categories
 import Handler.DeleteCategory
 import Handler.EditCategory
 import Handler.Users
+import Handler.Uploads
+import Handler.NewUpload
+import Handler.Upload
 import Handler.EditUser
 
 -- This line actually creates our YesodDispatch instance. It is the second half

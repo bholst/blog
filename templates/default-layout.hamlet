@@ -31,6 +31,8 @@
                 <li>
                   <a href=@{CategoriesR}>_{MsgCategories}
                 <li>
+                  <a href=@{UploadsR}>_{MsgUploads}
+                <li>
                   <a href=@{UsersR}>_{MsgUsers}
                 <li>
                   <a href=@{AuthR LogoutR}>_{MsgLogout}

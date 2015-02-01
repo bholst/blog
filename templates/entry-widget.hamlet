@@ -1,0 +1,59 @@
+<div>
+  $case mLink
+    $of Just link
+      <a href=@{link}>
+        <h1 .alignleft>#{entryTitle entry}
+    $of _
+      <h1 .alignleft>#{entryTitle entry}
+  $maybe entryId <- mEntryId
+    $maybe Entity _ user <- muser
+      $if isAdmin user
+          <div .btn-group .btn-group-sm .alignright>
+            <a type=button .btn .btn-default  href=@{EditEntryR entryId}>_{MsgEditEntry}
+            <div .btn-group .btn-group-sm>
+              <button type=button .btn .btn-default .dropdown-toggle data-toggle=dropdown>
+                <span .caret>
+              <ul .dropdown-menu .dropdown-menu-right role=menu>
+                <li>
+                  <a href=@{EditEntryR entryId}>_{MsgEditEntry}
+                <li>
+                  <a href=@{DeleteEntryR entryId}>_{MsgDeleteEntry}
+<div style="clear: both;">
+<section .entry>
+    $if not (null uploads)
+        $case uploads
+            $of [Entity uploadId upload]
+                <figure .alignright>
+                    <a href=@{UploadR uploadId} target=_blank>
+                        <img .auto .img-rounded alt=#{uploadDescription upload} src=@{UploadR uploadId}/>
+            $of _
+                <div id="myCarousel" .carousel .slide data-ride="carousel" .alignright        >
+                    <ol .carousel-indicators>
+                        $forall i <- map fst indexedUploads
+                            $if i == 0
+                                <li data-target="#myCarousel" data-slide-to="#{show i}" .active>
+                            $else
+                                <li data-target="#myCarousel" data-slide-to="#{show i}">
+                    <div .carousel-inner role=listbox>
+                        $forall (i, Entity uploadId upload) <- indexedUploads
+                            $if i == 0
+                                <div .item .active>
+                                    <a href=@{UploadR uploadId} target=_blank>
+                                        <img src=@{UploadR uploadId} alt=#{uploadDescription upload}>
+                            $else
+                                <div .item>
+                                    <a href=@{UploadR uploadId} target=_blank>
+                                        <img src=@{UploadR uploadId} alt=#{uploadDescription upload}>
+                    <a .left .carousel-control href="#myCarousel" role="button" data-slide="prev">
+                        <span .glyphicon .glyphicon-chevron-left aria-hidden="true">
+                        <span .sr-only>
+                            Previous
+                    <a .right .carousel-control href="#myCarousel" role="button" data-slide="next">
+                        <span .glyphicon .glyphicon-chevron-right aria-hidden="true">
+                        <span .sr-only>
+                            Next
+    $if not (Text.null (entrySummary entry))
+      <p .summary>
+        #{entrySummary entry}
+    #{entryContent entry}
+<div style="clear: both;">

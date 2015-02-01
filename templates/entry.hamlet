@@ -1,44 +1,25 @@
-<div>
-  <h1 .alignleft>#{entryTitle entry}
-  $maybe Entity _ user <- muser
-    $if isAdmin user
-        <div .btn-group .btn-group-sm .alignright>
-          <a type=button .btn .btn-default  href=@{EditEntryR entryId}>_{MsgEditEntry}
-          <div .btn-group .btn-group-sm>
-            <button type=button .btn .btn-default .dropdown-toggle data-toggle=dropdown>
-              <span .caret>
-            <ul .dropdown-menu .dropdown-menu-right role=menu>
-              <li>
-                <a href=@{EditEntryR entryId}>_{MsgEditEntry}
-              <li>
-                <a href=@{DeleteEntryR entryId}>_{MsgDeleteEntry}
-<div style="clear: both;">
-<article>
-    $if not (Text.null (entrySummary entry))
-      <p .summary>
-        #{entrySummary entry}
-    #{entryContent entry}
-    <section .comments>
-        $if (not $ null comments) || extraEnableComments extra
-            <h1>_{MsgCommentsHeading}
+^{entryWidget entry uploads muser (Just entryId) Nothing}
+<section .comments>
+    $if (not $ null comments) || extraEnableComments extra
+        <h1>_{MsgCommentsHeading}
 
-            $if null comments
-                $if extraEnableComments extra
-                    <p>_{MsgNoComments}
-            $else
-                $forall Entity commentId (Comment _entry posted commentUser name text) <- comments
-                    <div .comment>
-                        <span .by>#{name}
-                        <span .at>#{show posted}
-                        $if canDeleteCommentBy muser commentUser
-                            <a href=@{DeleteCommentR commentId}>_{MsgDeleteComment}
-                        <div .content>#{text}
+        $if null comments
             $if extraEnableComments extra
-                <section>
-                    <h1>_{MsgAddCommentHeading}
-                $maybe (commentWidget, enctype) <- mCommentWidget
-                    <form .form-horizontal role=form method=post enctype=#{enctype}>
-                        ^{commentWidget}
-                $nothing
-                    <p>
-                        <a href=@{AuthR LoginR}>_{MsgLoginToComment}
+                <p>_{MsgNoComments}
+        $else
+            $forall Entity commentId (Comment _entry posted commentUser name text) <- comments
+                <div .comment>
+                    <span .by>#{name}
+                    <span .at>#{show posted}
+                    $if canDeleteCommentBy muser commentUser
+                        <a href=@{DeleteCommentR commentId}>_{MsgDeleteComment}
+                    <div .content>#{text}
+        $if extraEnableComments extra
+            <section>
+                <h1>_{MsgAddCommentHeading}
+            $maybe (commentWidget, enctype) <- mCommentWidget
+                <form .form-horizontal role=form method=post enctype=#{enctype}>
+                    ^{commentWidget}
+            $nothing
+                <p>
+                    <a href=@{AuthR LoginR}>_{MsgLoginToComment}

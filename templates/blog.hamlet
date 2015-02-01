@@ -1,14 +1,8 @@
 $if null entries
   <p>_{MsgNoEntries}
 $else
-  $forall (Entity entryId entry, comments) <- entries
-    <a href=@{EntryR entryId}>
-      <h1>#{entryTitle entry}
-    <article>
-      $if not (Text.null (entrySummary entry))
-        <p .summary>
-          #{entrySummary entry}
-      #{entryContent entry}
+  $forall (Entity entryId entry, comments, uploads) <- entries
+    ^{entryWidget entry uploads muser Nothing (Just (EntryR entryId))}
     $if extraEnableComments extra
       <p>
         <a href=@{EntryR entryId}>

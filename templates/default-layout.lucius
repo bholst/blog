@@ -22,3 +22,11 @@ pre[class*="language-"] > code[data-language] {
 .summary {
     font-weight: bold;
 }
+
+img {
+    max-width: 100%;
+}
+
+section {
+    clear: both;
+}

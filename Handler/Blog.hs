@@ -8,18 +8,30 @@ where
 import Import
 import qualified Data.Conduit.List as CL
 import Data.Conduit
-import qualified Data.Text as Text
 import Database.Persist.Sql (SqlPersistT)
+import Handler.Entry (entryWidget, getUploads)
 import Yesod.RssFeed (rssLink)
 import Yesod.AtomFeed (atomLink)
 
+entriesWithCommentsSource :: Source (SqlPersistT Handler) (Entity Entry, Int)
+entriesWithCommentsSource =
+  selectSource [] [Desc EntryPosted] $=
+  countComments
+
+getEntriesWithUploads :: Handler [(Entity Entry, Int, [Entity Upload])]
+getEntriesWithUploads = runDB $
+  entriesWithCommentsSource $=
+  addUploads $$
+  CL.consume
+
 getEntries :: Handler [(Entity Entry, Int)]
 getEntries = runDB $
-  selectSource [] [Desc EntryPosted] =$ countComments $$ CL.consume
+  entriesWithCommentsSource $$
+  CL.consume
 
 getBlogR :: Handler Html
 getBlogR = do
-  entries <- getEntries
+  entries <- getEntriesWithUploads
   muser <- maybeAuth
   extra <- getExtra
   let pagename  = extraPagename extra
@@ -30,17 +42,26 @@ getBlogR = do
     atomLink AtomFeedR pagename
     $(widgetFile "blog")
 
-getEntriesByCategory :: CategoryId -> Handler [(Entity Entry, Int)]
-getEntriesByCategory categoryId = runDB $ do
-  categoryEntries <- selectList [CategoryEntryCategory ==. categoryId] []
+entriesWithCommentsByCategorySource :: CategoryId -> Source (SqlPersistT Handler) (Entity Entry, Int)
+entriesWithCommentsByCategorySource categoryId = do
+  categoryEntries <- lift $ selectList [CategoryEntryCategory ==. categoryId] []
   let entryIds = map (categoryEntryEntry . entityVal) categoryEntries
-  selectSource [EntryId <-. entryIds] [Desc EntryPosted] =$ countComments $$ CL.consume
+  selectSource [EntryId <-. entryIds] [Desc EntryPosted] $= countComments
+
+getEntriesByCategory :: CategoryId -> Handler [(Entity Entry, Int)]
+getEntriesByCategory categoryId = runDB $
+  entriesWithCommentsByCategorySource categoryId $$ CL.consume
+
+getEntriesByCategoryWithUploads :: CategoryId -> Handler [(Entity Entry, Int, [Entity Upload])]
+getEntriesByCategoryWithUploads categoryId = runDB $
+  entriesWithCommentsByCategorySource categoryId $=
+  addUploads $$ CL.consume
 
 getCategoryR :: CategoryId -> Handler Html
 getCategoryR categoryId = do
   category <- runDB $ do
     get404 categoryId
-  entries <- getEntriesByCategory categoryId
+  entries <- getEntriesByCategoryWithUploads categoryId
   muser <- maybeAuth
   extra <- getExtra
   let pagename = extraPagename extra
@@ -58,3 +79,8 @@ countComments :: (MonadIO m) =>
 countComments = awaitForever (\entity -> do
   commentCount <- lift $ count [CommentEntry ==. (entityKey entity)]
   yield (entity, commentCount))
+
+addUploads :: Conduit (Entity Entry, a) (SqlPersistT Handler) (Entity Entry, a, [Entity Upload])
+addUploads = awaitForever $ \(entity, x) -> do
+  uploads <- lift $ getUploads $ entityKey entity
+  yield (entity, x, uploads)

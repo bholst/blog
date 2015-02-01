@@ -22,3 +22,6 @@
 /blog/category/#CategoryId/edit EditCategoryR GET POST
 /users UsersR GET
 /user/#UserId/edit EditUserR GET POST
+/uploads UploadsR GET
+/uploads/new NewUploadR GET POST
+/upload/#UploadId UploadR GET

@@ -5,6 +5,7 @@ Login: Anmelden
 Logout: Abmelden
 NewEntry: Neuer Eintrag
 Categories: Kategorien
+Uploads: Dateien
 Users: Benutzer
 
 BlogTitle: Blog
@@ -31,6 +32,7 @@ EditEntryTitle: Eintrag bearbeiten
 NewEntrySummary: Zusammenfassung
 NewEntryContent: Inhalt
 NewEntryCategories: Kategorien
+NewEntryImages: Bilder
 PreviewButton: Vorschau
 JustPreviewWarning: Dies ist nur eine Vorschau!
 SummaryTooLong length@Int: Die Zusammenfassung ist zu lang. Es sind nur #{show length} Zeichen erlaubt.
@@ -92,3 +94,14 @@ EditUserHeader ident@Text: Benutzer #{ident} bearbeiten
 UserEdited ident@Text: Benutzer #{ident} wurde erfolgreich bearbeitet.
 PleaseCorrectUser: Ihr eingegebener Benutzer hatte Fehler. Bitte korrigieren Sie diese und versuchen Sie es erneut.
 IsAdmin: Administrator
+
+UploadsTitle pagename@Text: pagename: Dateien
+NoUploads: Es gibt noch keine hochgeladenen Dateien
+NewUpload: Datei hochladen
+
+NewUploadTitle: Neue Datei hochladen
+UploadFileDescription: Beschreibung
+UploadFileField: Datei
+UploadFileSubmit: Hochladen
+FileUploadFailed: Hochladen fehlgeschlagen.
+UploadSaved: Hochladen erfolgreich.

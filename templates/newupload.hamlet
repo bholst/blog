@@ -1,0 +1,2 @@
+<form .form-horizontal role=form method=post enctype=#{enctype}>
+  ^{newUploadWidget}

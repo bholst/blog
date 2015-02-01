@@ -27,5 +27,13 @@ Comment
     user UserId
     name Text
     text Textarea
+Upload
+    description Text
+    path Text
+    posted UTCTime
+    type Text
+EntryUpload
+    entry EntryId
+    upload UploadId
 
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)
