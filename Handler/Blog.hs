@@ -83,4 +83,4 @@ countComments = awaitForever (\entity -> do
 addUploads :: Conduit (Entity Entry, a) (SqlPersistT Handler) (Entity Entry, a, [Entity Upload])
 addUploads = awaitForever $ \(entity, x) -> do
   uploads <- lift $ getUploads $ entityKey entity
-  yield (entity, x, uploads)
+  yield (entity, x, take 1 uploads)
