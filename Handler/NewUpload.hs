@@ -8,7 +8,7 @@ import Data.Conduit
 import Data.Conduit.Combinators (sinkHandle)
 import qualified Data.Text as Text
 import Data.Time.Clock (getCurrentTime)
-import System.Directory (canonicalizePath)
+import System.Directory (canonicalizePath, createDirectoryIfMissing)
 import System.IO.Temp (openTempFile)
 
 fileUploadForm :: Maybe (FileInfo, Text) -> Form (FileInfo, Text)
@@ -30,7 +30,9 @@ postNewUploadR = do
   case res of
     FormSuccess (fi, desc) -> do
       let contentType = fileContentType fi
-      (filePath, handle) <- liftIO $ openTempFile "uploads" "upload"
+          uploadDir = "uploads"
+      liftIO $ createDirectoryIfMissing True uploadDir
+      (filePath, handle) <- liftIO $ openTempFile uploadDir "upload"
       liftIO $ putStrLn $ show $ fileContentType fi
       let source = fileSource fi
       source $$ sinkHandle handle
