@@ -24,7 +24,12 @@
         $case uploads
             $of [Entity uploadId upload]
                 <figure .alignright>
-                    <a href=@{UploadR uploadId} target=_blank>
+                  $case mLink
+                    $of Just link
+                      <a href=@{link}>
+                        <img .auto .img-rounded alt=#{uploadDescription upload} src=@{UploadR uploadId}/>
+                    $of Nothing
+                      <a href=@{UploadR uploadId} target=_blank>
                         <img .auto .img-rounded alt=#{uploadDescription upload} src=@{UploadR uploadId}/>
             $of _
                 <div id="myCarousel" .carousel .slide data-ride="carousel" .alignright        >
