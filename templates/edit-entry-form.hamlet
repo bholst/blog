@@ -12,6 +12,9 @@
   <div class="#{required checkBoxView}">
     <label for="#{fvId checkBoxView}">#{fvLabel checkBoxView}
     ^{fvInput checkBoxView}
+  <div class="#{required titleImageView}">
+    <label for="#{fvId titleImageView}">#{fvLabel titleImageView}
+    ^{fvInput titleImageView}
   <div class="#{required uploadsView}">
     <label for="#{fvId uploadsView}">#{fvLabel uploadsView}
     ^{fvInput uploadsView}

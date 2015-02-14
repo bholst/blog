@@ -1,9 +1,6 @@
 module Handler.Entry where
 
 import Import
-import Database.Persist.Sql (SqlPersistT)
-import Data.Conduit
-import qualified Data.Conduit.List as CL
 import qualified Data.Text as Text
 import Data.Time.Clock
 
@@ -30,23 +27,39 @@ entryWidget entry uploads muser mEntryId mLink =
     let indexedUploads = zip ([0..] :: [Integer]) uploads
     in $(widgetFile "entry-widget")
 
-getUploads :: EntryId -> SqlPersistT Handler [Entity Upload]
-getUploads entryId =
-    selectSource [EntryUploadEntry ==. entryId] [] $=
-    (awaitForever $
-      \(Entity _ entryUpload) -> do
-        let uploadId = entryUploadUpload entryUpload
-        upload <- lift (get uploadId)
-        yield $ fmap (Entity uploadId) upload) $=
-    CL.catMaybes $$
-    CL.consume
+getOtherUploads :: EntryId -> SqlPersistT Handler [Entity Upload]
+getOtherUploads entryId =
+  select $
+  from $ \(entryUpload `InnerJoin` upload) -> do
+    where_ (entryUpload ^. EntryUploadEntry ==. val entryId)
+    on (entryUpload ^. EntryUploadUpload ==. upload ^. UploadId)
+    return upload
+
+getUploads :: Entry -> SqlPersistT Handler [Entity Upload] -> SqlPersistT Handler [Entity Upload]
+getUploads entry getOthers = do
+    others <- getOthers
+    mTitleImage <-
+      case entryTitleImage entry of
+        Nothing -> return Nothing
+        Just imageId -> do
+          image <- get imageId
+          return $ fmap (Entity imageId) image
+    case mTitleImage of
+      Nothing -> return $ others
+      Just titleImage ->
+        return $ titleImage : (filter (\e -> entityKey e /= entityKey titleImage) others)
 
 getEntryR :: EntryId -> Handler Html
 getEntryR entryId = do
     (entry, comments, uploads) <- runDB $ do
         entry <- get404 entryId
-        comments <- selectList [CommentEntry ==. entryId] [Asc CommentPosted]
-        uploads <- getUploads entryId
+        comments <-
+          select $
+          from $ \comment -> do
+            where_ (comment ^. CommentEntry ==. val entryId)
+            orderBy [asc (comment ^. CommentPosted)]
+            return comment
+        uploads <- getUploads entry $ getOtherUploads entryId
         return (entry, comments, uploads)
     muser <- maybeAuth
     mCommentWidget <-

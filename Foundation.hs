@@ -212,7 +212,6 @@ instance YesodAuth App where
     -- Where to send a user after logout
     logoutDest _ = HomeR
 
-
     getAuthId creds = do
         extra <- getExtra
         runDB $ do

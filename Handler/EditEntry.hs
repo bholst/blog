@@ -6,32 +6,44 @@ module Handler.EditEntry
 where
 
 import Import
-import Control.Monad (liftM)
 import Data.Maybe (catMaybes, fromMaybe)
 import qualified Data.Text as Text
 import Data.Time.Clock
-import qualified Handler.Entry as Entry (entryWidget)
+import qualified Handler.Entry as Entry (entryWidget, getUploads)
 import qualified Text.Blaze.Html5 as Html
 
 entryForm :: RenderMessage App msg => msg -> Maybe (Entity Entry) -> Html -> MForm Handler (FormResult (Entry, Maybe [CategoryId], Maybe [UploadId]), Widget)
 entryForm msg mentryEntity extra = do
   let mentry = entityVal <$> mentryEntity
-  (categories, categoryEntries) <- lift $ runDB $ do
-    categories <- selectList [] [Asc CategoryName]
-    case mentryEntity of
-      Just (Entity entryId _) -> do
-        categoryEntries <- selectList [CategoryEntryEntry ==. entryId] []
-        return (categories, Just $ Just (map (categoryEntryCategory . entityVal) categoryEntries))
-      Nothing ->
-        return (categories, Nothing)
-  (uploads, entryUploads) <- lift $ runDB $ do
-    uploads <- selectList [] [Asc UploadDescription]
-    case mentryEntity of
-      Just (Entity entryId _) -> do
-        entryUploads <- selectList [EntryUploadEntry ==. entryId] []
-        return (uploads, Just $ Just (map (entryUploadUpload . entityVal) entryUploads))
-      Nothing ->
-        return (uploads, Nothing)
+      mentryId = entityKey <$> mentryEntity
+  categoriesWithEntries <- lift $ runDB $
+    select $ from $ \(categoryEntry `RightOuterJoin` category) -> do
+      on $
+        (just (category ^. CategoryId) ==. categoryEntry ?. CategoryEntryCategory)
+        &&. (categoryEntry ?. CategoryEntryEntry ==. val mentryId)
+      return (category, categoryEntry)
+  let categories = map fst categoriesWithEntries
+      categoryEntries =
+        case mentryId of
+          Nothing -> Nothing
+          Just _ ->
+            Just $ Just $
+            map (entityKey . fst) $ filter (\(_, ce) -> isJust ce)
+            categoriesWithEntries
+  uploadsWithEntries <- lift $ runDB $
+    select $ from $ \(entryUpload `RightOuterJoin` upload) -> do
+      on $
+        (just (upload ^. UploadId) ==. entryUpload ?. EntryUploadUpload)
+        &&. (entryUpload ?. EntryUploadEntry ==. val mentryId)
+      return (upload, entryUpload)
+  let uploads = map fst uploadsWithEntries
+      entryUploads =
+         case mentryId of
+           Nothing -> Nothing
+           Just _ ->
+             Just $ Just $
+             map (entityKey . fst) $ filter (\(_, eu) -> isJust eu)
+             uploadsWithEntries
   (titleRes, titleView) <- mreq textField (bfs MsgNewEntryTitle) (entryTitle <$> mentry)
   currentTime <- liftIO getCurrentTime
   extraSettings <- lift getExtra
@@ -53,9 +65,10 @@ entryForm msg mentryEntity extra = do
   (contentRes, contentView) <- mreq markdownField newCfs (entryContent <$> mentry)
   (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
   (categoriesRes, checkBoxView) <- mopt (checkboxesFieldList $ map categoryCheckBox categories) (bfs MsgNewEntryCategories) categoryEntries
+  (titleImageRes, titleImageView) <- mopt (selectFieldList $ map uploadsOption uploads) (bfs MsgNewEntryTitleImage) (entryTitleImage <$> mentry)
   (uploadsRes, uploadsView) <- mopt (multiSelectFieldList $ map uploadsOption uploads) (bfs MsgNewEntryImages) entryUploads
   let widget = $(widgetFile "edit-entry-form")
-      entryRes = Entry <$> titleRes <*> postedTime <*> updatedTime <*> summaryRes <*> contentRes <* submitRes
+      entryRes = Entry <$> titleRes <*> postedTime <*> updatedTime <*> summaryRes <*> contentRes <*> titleImageRes <* submitRes
   return ((,,) <$> entryRes <*> categoriesRes <*> uploadsRes, widget)
  where
   categoryCheckBox :: Entity Category -> (Text, CategoryId)
@@ -74,7 +87,9 @@ handleEntryFormResult mEntryId ((FormSuccess (newentry, mcategories, muploadIds)
   case isPreview of
     Just True -> do
       uploads <-
-        liftM catMaybes $ runDB $
+        runDB $
+        Entry.getUploads newentry $
+        liftM catMaybes $
         mapM (\eid -> get eid >>= return . fmap (Entity eid)) uploadIds
       muser <- maybeAuth
       defaultLayout $ do
@@ -86,8 +101,8 @@ handleEntryFormResult mEntryId ((FormSuccess (newentry, mcategories, muploadIds)
           entryId <-
             case mEntryId of
               Just entryId -> do
-                deleteWhere [CategoryEntryEntry ==. entryId]
-                deleteWhere [EntryUploadEntry ==. entryId]
+                delete $ from (\ce -> where_ (ce ^. CategoryEntryEntry ==. val entryId))
+                delete $ from (\eu -> where_ (eu ^. EntryUploadEntry ==. val entryId))
                 replace entryId newentry
                 return entryId
               Nothing ->

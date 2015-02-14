@@ -32,6 +32,7 @@ EditEntryTitle: Eintrag bearbeiten
 NewEntrySummary: Zusammenfassung
 NewEntryContent: Inhalt
 NewEntryCategories: Kategorien
+NewEntryTitleImage: Titelbild
 NewEntryImages: Bilder
 PreviewButton: Vorschau
 JustPreviewWarning: Dies ist nur eine Vorschau!

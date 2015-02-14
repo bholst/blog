@@ -8,19 +8,19 @@ import Data.Time.Clock
 import Handler.Blog (getEntries, getEntriesByCategory)
 
 getRssFeedR :: Handler RepRss
-getRssFeedR = (map fst) <$> getEntries >>= getFeed RssFeedR >>= rssFeed
+getRssFeedR = (map fst3) <$> getEntries >>= getFeed RssFeedR >>= rssFeed
 
 getAtomFeedR :: Handler RepAtom
-getAtomFeedR = (map fst) <$> getEntries >>= getFeed AtomFeedR >>= atomFeed
+getAtomFeedR = (map fst3) <$> getEntries >>= getFeed AtomFeedR >>= atomFeed
 
 getCategoryRssFeedR :: CategoryId -> Handler RepRss
 getCategoryRssFeedR categoryId =
-  (map fst) <$> (getEntriesByCategory categoryId)
+  (map fst3) <$> (getEntriesByCategory categoryId)
   >>= getFeed RssFeedR >>= rssFeed
 
 getCategoryAtomFeedR :: CategoryId -> Handler RepAtom
 getCategoryAtomFeedR categoryId =
-  (map fst) <$> (getEntriesByCategory categoryId)
+  (map fst3) <$> (getEntriesByCategory categoryId)
   >>= getFeed AtomFeedR >>= atomFeed
 
 getFeed :: Route (HandlerSite Handler) -> [Entity Entry] -> Handler (Feed (Route (HandlerSite Handler)))

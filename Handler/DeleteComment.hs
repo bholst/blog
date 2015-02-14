@@ -25,7 +25,7 @@ postDeleteCommentR commentId = do
   comment <- runDB $ get404 commentId
   case res of
     FormSuccess _ -> do
-      runDB $ delete commentId
+      runDB $ deleteKey commentId
       setMessageI MsgCommentDeleted
       redirect $ EntryR (commentEntry comment)
     _ -> do

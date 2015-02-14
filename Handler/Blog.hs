@@ -6,32 +6,41 @@ module Handler.Blog
 where
 
 import Import
-import qualified Data.Conduit.List as CL
-import Data.Conduit
-import Database.Persist.Sql (SqlPersistT)
-import Handler.Entry (entryWidget, getUploads)
+import Handler.Entry (entryWidget)
 import Yesod.RssFeed (rssLink)
 import Yesod.AtomFeed (atomLink)
 
-entriesWithCommentsSource :: Source (SqlPersistT Handler) (Entity Entry, Int)
-entriesWithCommentsSource =
-  selectSource [] [Desc EntryPosted] $=
-  countComments
+getEntries :: Handler [(Entity Entry, Int, Maybe (Entity Upload))]
+getEntries  =
+  liftM (map $ mapSnd3 unValue) $ runDB $ select expr
+  where
+  expr =
+    from $ \(e `LeftOuterJoin` c `LeftOuterJoin` i) -> do
+      on (e ^. EntryTitleImage ==. i ?. UploadId)
+      on (c ?. CommentEntry ==. just (e ^. EntryId))
+      orderBy [desc (e ^. EntryPosted)]
+      groupBy (e ^. EntryId)
+      groupBy (i ?. UploadId)
+      return (e, count (c ?. CommentId), i)
 
-getEntriesWithUploads :: Handler [(Entity Entry, Int, [Entity Upload])]
-getEntriesWithUploads = runDB $
-  entriesWithCommentsSource $=
-  addUploads $$
-  CL.consume
-
-getEntries :: Handler [(Entity Entry, Int)]
-getEntries = runDB $
-  entriesWithCommentsSource $$
-  CL.consume
+getEntriesByCategory :: CategoryId -> Handler [(Entity Entry, Int, Maybe (Entity Upload))]
+getEntriesByCategory categoryId =
+  liftM (map $ mapSnd3 unValue) $ runDB $ select expr
+  where
+  expr =
+    from $ \(cat `InnerJoin` e `LeftOuterJoin` c `LeftOuterJoin` i) -> do
+      where_ (cat ^. CategoryEntryCategory ==. val categoryId)
+      on (e ^. EntryTitleImage ==. i ?. UploadId)
+      on (just (e ^. EntryId) ==. c ?. CommentEntry)
+      on (cat ^. CategoryEntryEntry ==. e ^. EntryId)
+      orderBy [desc (e ^. EntryPosted)]
+      groupBy (e ^. EntryId)
+      groupBy (i ?. UploadId)
+      return (e, count (c ?. CommentId), i)
 
 getBlogR :: Handler Html
 getBlogR = do
-  entries <- getEntriesWithUploads
+  entries <- getEntries
   muser <- maybeAuth
   extra <- getExtra
   let pagename  = extraPagename extra
@@ -42,26 +51,11 @@ getBlogR = do
     atomLink AtomFeedR pagename
     $(widgetFile "blog")
 
-entriesWithCommentsByCategorySource :: CategoryId -> Source (SqlPersistT Handler) (Entity Entry, Int)
-entriesWithCommentsByCategorySource categoryId = do
-  categoryEntries <- lift $ selectList [CategoryEntryCategory ==. categoryId] []
-  let entryIds = map (categoryEntryEntry . entityVal) categoryEntries
-  selectSource [EntryId <-. entryIds] [Desc EntryPosted] $= countComments
-
-getEntriesByCategory :: CategoryId -> Handler [(Entity Entry, Int)]
-getEntriesByCategory categoryId = runDB $
-  entriesWithCommentsByCategorySource categoryId $$ CL.consume
-
-getEntriesByCategoryWithUploads :: CategoryId -> Handler [(Entity Entry, Int, [Entity Upload])]
-getEntriesByCategoryWithUploads categoryId = runDB $
-  entriesWithCommentsByCategorySource categoryId $=
-  addUploads $$ CL.consume
-
 getCategoryR :: CategoryId -> Handler Html
 getCategoryR categoryId = do
   category <- runDB $ do
     get404 categoryId
-  entries <- getEntriesByCategoryWithUploads categoryId
+  entries <- getEntriesByCategory categoryId
   muser <- maybeAuth
   extra <- getExtra
   let pagename = extraPagename extra
@@ -73,14 +67,3 @@ getCategoryR categoryId = do
     rssLink  (CategoryRssFeedR  categoryId) (mr name)
     atomLink (CategoryAtomFeedR categoryId) (mr name)
     $(widgetFile "blog")
-
-countComments :: (MonadIO m) =>
-                 Conduit (Entity Entry) (SqlPersistT m) (Entity Entry, Int)
-countComments = awaitForever (\entity -> do
-  commentCount <- lift $ count [CommentEntry ==. (entityKey entity)]
-  yield (entity, commentCount))
-
-addUploads :: Conduit (Entity Entry, a) (SqlPersistT Handler) (Entity Entry, a, [Entity Upload])
-addUploads = awaitForever $ \(entity, x) -> do
-  uploads <- lift $ getUploads $ entityKey entity
-  yield (entity, x, take 1 uploads)

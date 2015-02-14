@@ -28,7 +28,7 @@ postNewUploadR :: Handler Html
 postNewUploadR = do
   ((res, newUploadWidget), enctype) <- runFormPost (fileUploadForm Nothing)
   case res of
-    FormSuccess (fi, desc) -> do
+    FormSuccess (fi, description) -> do
       let contentType = fileContentType fi
           uploadDir = "uploads"
       liftIO $ createDirectoryIfMissing True uploadDir
@@ -38,7 +38,7 @@ postNewUploadR = do
       source $$ sinkHandle handle
       now <- lift getCurrentTime
       completePath <- liftIO $ canonicalizePath filePath
-      _ <- runDB $ insert (Upload desc (Text.pack completePath) now contentType)
+      _ <- runDB $ insert (Upload description (Text.pack completePath) now contentType)
       setMessageI MsgUploadSaved
       redirect UploadsR
     _ -> do

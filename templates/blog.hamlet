@@ -1,8 +1,8 @@
 $if null entries
   <p>_{MsgNoEntries}
 $else
-  $forall (Entity entryId entry, comments, uploads) <- entries
-    ^{entryWidget entry uploads muser Nothing (Just (EntryR entryId))}
+  $forall (Entity entryId entry, comments, titleImage) <- entries
+    ^{entryWidget entry (maybeToList titleImage) muser Nothing (Just (EntryR entryId))}
     $if extraEnableComments extra
       <p>
         <a href=@{EntryR entryId}>

@@ -8,14 +8,13 @@ module Application
 import Import
 import Settings
 import Yesod.Default.Config
-import Yesod.Default.Main
+import Yesod.Default.Main hiding (LogFunc)
 import Yesod.Default.Handlers
 import Network.Wai.Middleware.RequestLogger
     ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
     )
 import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
 import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
 import Network.HTTP.Client.Conduit (newManager)
 import Control.Monad.Logger (runLoggingT)
 import Control.Concurrent (forkIO, threadDelay)

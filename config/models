@@ -15,6 +15,7 @@ Entry
     updated UTCTime "default=(now() at time zone 'utc')"
     summary Text "default=''"
     content Markdown
+    titleImage UploadId Maybe
 Category
     name Text
     UniqueCategory name

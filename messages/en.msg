@@ -32,6 +32,7 @@ EditEntryTitle: Edit Entry
 NewEntrySummary: Summary
 NewEntryContent: Content
 NewEntryCategories: Categories
+NewEntryTitleImage: Title image
 NewEntryImages: Images
 PreviewButton: Preview
 JustPreviewWarning: This is just a preview!
