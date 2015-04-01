@@ -60,6 +60,12 @@ required fv = case fvRequired fv of
   True -> "required"
   False -> "optional"
 
+takes :: Int -> [a] -> [[a]]
+takes _ [] = []
+takes n xs =
+  let (f, l) = splitAt n xs
+  in f : takes n l
+
 mapFst :: (a -> b) -> (a, c) -> (b, c)
 mapFst f (x, y) = (f x, y)
 
