@@ -95,8 +95,7 @@ instance Yesod App where
             $(combineScripts 'StaticR
                 [ js_jquery_js
                 , js_bootstrap_js
-                , js_prism_js
-                , js_prism_haskell_js ])
+                , js_prism_js ])
 
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
