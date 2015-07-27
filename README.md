@@ -19,8 +19,9 @@ Getting started
 You first need to install the Haskell compiler [GHC][ghc] and
 [Cabal-install][cabal]. Instead of installing it individually, I
 recommend installing it both from [Haskell Platform][platform] or from your
-Linux distribution's package manager. Currently, I am working with Haskell
-Platform 2013.2.0.0, which uses GHC 7.6.3, but newer version may work as well.
+Linux distribution's package manager. Currently, I am working with GHC 7.10.1
+and the package versions mentioned in cabal.config, but newer version may work
+as well.
 
 After installing the Haskell Platform, you should get the sources of this blog
 software. I recommend creating a cabal sandbox for the blog
