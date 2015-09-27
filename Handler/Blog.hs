@@ -44,7 +44,6 @@ getBlogR = do
   muser <- maybeAuth
   extra <- getExtra
   let pagename  = extraPagename extra
-      noEntries = MsgNoEntries
   defaultLayout $ do
     setTitle (toHtml pagename)
     rssLink  RssFeedR  pagename
@@ -60,7 +59,6 @@ getCategoryR categoryId = do
   extra <- getExtra
   let pagename = extraPagename extra
       name      = MsgCategoryTitle pagename $ categoryName category
-      noEntries = (MsgNoCategoryEntries $ categoryName category)
   mr <- getMessageRender
   defaultLayout $ do
     setTitleI name

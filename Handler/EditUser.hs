@@ -23,7 +23,7 @@ userForm msg userId user extra = do
           else
             adminFieldSettingsBase
   (adminRes, adminView) <- mopt checkBoxField adminFieldSettings (Just $ Just $ userAdmin user)
-  (submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
+  (_submitRes, submitView) <- mbootstrapSubmit (BootstrapSubmit msg "" [])
   liftIO $ putStrLn $ "Admin: " ++ show adminRes
   let widget = $(widgetFile "edit-user-form")
       adminResCorrect =
