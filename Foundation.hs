@@ -224,8 +224,7 @@ instance YesodAuth App where
                         }
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [ authBrowserId def
-                    , authOpenId OPLocal [] ]
+    authPlugins _ = [ authBrowserId def ]
 
     authHttpManager = httpManager
 
