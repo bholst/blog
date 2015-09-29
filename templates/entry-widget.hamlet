@@ -20,9 +20,9 @@
                   <a href=@{DeleteEntryR entryId}>_{MsgDeleteEntry}
 <div style="clear: both;">
 <section .entry>
-    $if not (null uploads)
-        $case uploads
-            $of [Entity uploadId upload]
+    $if not (null indexedImages)
+        $case indexedImages
+            $of [(_, Entity uploadId upload)]
                 <figure .alignright>
                   $case mLink
                     $of Just link
@@ -34,13 +34,13 @@
             $of _
                 <div id="myCarousel" .carousel .slide data-ride="carousel" .alignright        >
                     <ol .carousel-indicators>
-                        $forall i <- map fst indexedUploads
+                        $forall i <- map fst indexedImages
                             $if i == 0
                                 <li data-target="#myCarousel" data-slide-to="#{show i}" .active>
                             $else
                                 <li data-target="#myCarousel" data-slide-to="#{show i}">
                     <div .carousel-inner role=listbox>
-                        $forall (i, Entity uploadId upload) <- indexedUploads
+                        $forall (i, Entity uploadId upload) <- indexedImages
                             $if i == 0
                                 <div .item .active>
                                     <a href=@{UploadR uploadId} target=_blank>
@@ -61,4 +61,15 @@
       <p .summary>
         #{entrySummary entry}
     #{entryContent entry}
+    $if not (null otherUploads)
+      <h3>
+        _{MsgEntryDownloads}
+      <div .downloads>
+        <ul>
+          $forall Entity uploadId upload <- otherUploads
+            <li>
+              <a href=@{UploadR uploadId}>
+                #{uploadDescription upload}
+
+
 <div style="clear: both;">

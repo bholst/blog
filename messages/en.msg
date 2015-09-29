@@ -25,6 +25,7 @@ NoComments: There are no comments.
 AddCommentHeading: Add a Comment
 LoginToComment: You must be logged in to comment.
 AddCommentButton: Add comment
+EntryDownloads: Downloads
 
 SaveEntryChanges: Save Changes
 NewEntryTitle: Title

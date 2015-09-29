@@ -25,6 +25,7 @@ NoComments: Es gibt noch keinen Kommentar.
 AddCommentHeading: Kommentar abgeben
 LoginToComment: Sie müssen angemeldet sein, um einen Kommentar abzugeben.
 AddCommentButton: Kommantar abgeben
+EntryDownloads: Downloads
 
 SaveEntryChanges: Änderungen speichern
 NewEntryTitle: Titel

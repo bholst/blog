@@ -1,6 +1,7 @@
 module Handler.Entry where
 
 import Import
+import qualified Data.List as L
 import qualified Data.Text as Text
 import Data.Time.Clock
 
@@ -24,8 +25,15 @@ canDeleteCommentBy muser commentUserId =
 
 entryWidget :: Entry -> [Entity Upload] -> Maybe (Entity User) -> Maybe EntryId -> Maybe (Route App) -> Widget
 entryWidget entry uploads muser mEntryId mLink =
-    let indexedUploads = zip ([0..] :: [Integer]) uploads
-    in $(widgetFile "entry-widget")
+  let (images, otherUploads) = L.partition isImage uploads
+      indexedImages = zip ([0..] :: [Integer]) images
+  in $(widgetFile "entry-widget")
+  where
+    isImage :: Entity Upload -> Bool
+    isImage (entityVal -> uploadEntity) =
+      case Text.takeWhile (/= '/') $ uploadType uploadEntity of
+        "image" -> True
+        _ -> False
 
 getOtherUploads :: EntryId -> SqlPersistT Handler [Entity Upload]
 getOtherUploads entryId =
@@ -89,5 +97,5 @@ postEntryR entryId = do
                 $(widgetFile "newcomment")
       else
         defaultLayout $ do
-	  setMessageI MsgCommentsDisabled
-	  redirect $ EntryR entryId
+          setMessageI MsgCommentsDisabled
+          redirect $ EntryR entryId
