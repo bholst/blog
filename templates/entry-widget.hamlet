@@ -68,7 +68,7 @@
         <ul>
           $forall Entity uploadId upload <- otherUploads
             <li>
-              <a href=@{UploadR uploadId}>
+              <a target=_blank href=@{UploadR uploadId}>
                 #{uploadDescription upload}
 
 
