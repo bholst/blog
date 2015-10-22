@@ -67,7 +67,6 @@ widgetFile = (if development then widgetFileReload
 
 data Extra = Extra
     { extraCopyright      :: Text
-    , extraAnalytics      :: Maybe Text -- ^ Google Analytics
     , extraPagename       :: Text
     , extraAuthor         :: Text
     , extraAdmin          :: Text
@@ -80,7 +79,6 @@ data Extra = Extra
 parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = Extra
     <$> o .:  "copyright"
-    <*> o .:? "analytics"
     <*> o .:  "pagename"
     <*> o .:  "author"
     <*> o .:  "admin"
