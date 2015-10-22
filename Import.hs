@@ -26,7 +26,6 @@ import           Yesod                 as Import hiding
   , (||.)
   )
 
-import           Control.Applicative   as Import (pure, (<$>), (<*>), (<*))
 import           Control.Monad         as Import (liftM)
 import           Data.Maybe            as Import (maybeToList, isJust)
 import           Data.Text             as Import (Text)
@@ -41,19 +40,6 @@ import           Settings.StaticFiles  as Import
 import           Yesod.Auth            as Import
 import           Yesod.Form.Bootstrap3 as Import
 import           Yesod.Text.Markdown   as Import
-
-#if __GLASGOW_HASKELL__ >= 704
-import           Data.Monoid           as Import
-                                                 (Monoid (mappend, mempty, mconcat),
-                                                 (<>))
-#else
-import           Data.Monoid           as Import
-                                                 (Monoid (mappend, mempty, mconcat))
-
-infixr 5 <>
-(<>) :: Monoid m => m -> m -> m
-(<>) = mappend
-#endif
 
 required :: FieldView app -> Text
 required fv = case fvRequired fv of
