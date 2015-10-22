@@ -9,6 +9,7 @@ Default: &defaults
   enable_comments: True
   #summary_max_length: 200
   #analytics: UA-YOURCODE
+  #force_image_ratio: 1.5
 
 Development:
   <<: *defaults

@@ -106,4 +106,6 @@ UploadFileDescription: Beschreibung
 UploadFileField: Datei
 UploadFileSubmit: Hochladen
 FileUploadFailed: Hochladen fehlgeschlagen.
+WrongAspectRatio correctRatio@Double actualRatio@Double: Seitenverhältnis muss #{show correctRatio} betragen. Das hochgeladene Bild hat das Seitenverhältnis #{show actualRatio}.
+UnsupportedImageType contentType@Text: Bildformat #{show contentType} wird nicht unterstützt.
 UploadSaved: Hochladen erfolgreich.

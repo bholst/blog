@@ -106,4 +106,6 @@ UploadFileDescription: Description
 UploadFileField: File
 UploadFileSubmit: Upload
 FileUploadFailed: File upload failed.
+WrongAspectRatio correctRatio@Double actualRatio@Double: Aspect ratio has to be #{show correctRatio}. Your image has a ratio of #{show actualRatio}.
+UnsupportedImageType contentType@Text: Unsupported image type #{show contentType}.
 UploadSaved: File uploaded successfully.

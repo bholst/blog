@@ -94,6 +94,8 @@ library
                  , conduit-combinators           >= 0.3
                  , temporary                     >= 1.2
                  , esqueleto
+                 , gd
+                 , resourcet
 
 executable         blog
     if flag(library-only)

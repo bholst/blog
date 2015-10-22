@@ -73,6 +73,8 @@ data Extra = Extra
     , extraAdmin          :: Text
     , extraEnableComments :: Bool
     , summaryMaxLength    :: Maybe Int
+    , forceImageRatio     :: Maybe Double
+      -- ^ forced image ratio, for example 3:2 is 3/2 -> 1.5
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
@@ -84,3 +86,4 @@ parseExtra _ o = Extra
     <*> o .:  "admin"
     <*> o .:  "enable_comments"
     <*> o .:? "summary_max_length"
+    <*> o .:? "force_image_ratio"
