@@ -7,6 +7,7 @@
 / HomeR GET
 
 /blog BlogR GET
+/blog/page/#Int BlogPageR GET
 /blog/entry/#EntryId EntryR GET POST
 /blog/entry/#EntryId/edit EditEntryR GET POST
 /blog/new NewEntryR GET POST
@@ -16,6 +17,7 @@
 /blog/atom AtomFeedR GET
 /blog/categories CategoriesR GET POST
 /blog/category/#CategoryId CategoryR GET
+/blog/category/#CategoryId/page/#Int CategoryPageR GET
 /blog/category/#CategoryId/rss CategoryRssFeedR GET
 /blog/category/#CategoryId/atom CategoryAtomFeedR GET
 /blog/category/#CategoryId/delete DeleteCategoryR GET POST

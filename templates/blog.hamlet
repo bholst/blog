@@ -10,3 +10,33 @@ $else
             _{MsgFirstToComment}
           $else
             _{MsgNumberOfComments comments}
+$if mkPagination
+  <nav>
+    <ul class="pagination">
+      $if (page > 0)
+        <li>
+          <a href=@{routeCons (page - 1)} aria-label="Previous">
+            <span aria-hidden="true">
+              &laquo;
+      $else
+        <li .disabled>
+          <span aria-hidden="true">
+            &laquo;
+      $forall i <- pages
+        $if i == page
+          <li .active>
+            <a href=@{routeCons i}>
+              #{show (i + 1)}
+        $else
+          <li>
+            <a href=@{routeCons i}>
+              #{show (i + 1)}
+      $if (page + 1) < pageCount
+        <li>
+          <a href=@{routeCons (page + 1)} aria-label="Next">
+            <span aria-hidden="true">
+              &raquo;
+      $else
+        <li .disabled>
+          <span aria-hidden="true">
+            &raquo;

@@ -5,22 +5,22 @@ import Yesod.Feed
 import Yesod.RssFeed (rssFeed, RepRss)
 import Yesod.AtomFeed (atomFeed, RepAtom)
 import Data.Time.Clock
-import Handler.Blog (getEntries, getEntriesByCategory)
+import Handler.Blog (getAllEntries, getAllEntriesByCategory)
 
 getRssFeedR :: Handler RepRss
-getRssFeedR = (map fst3) <$> getEntries >>= getFeed RssFeedR >>= rssFeed
+getRssFeedR = (map fst3) <$> getAllEntries >>= getFeed RssFeedR >>= rssFeed
 
 getAtomFeedR :: Handler RepAtom
-getAtomFeedR = (map fst3) <$> getEntries >>= getFeed AtomFeedR >>= atomFeed
+getAtomFeedR = (map fst3) <$> getAllEntries >>= getFeed AtomFeedR >>= atomFeed
 
 getCategoryRssFeedR :: CategoryId -> Handler RepRss
 getCategoryRssFeedR categoryId =
-  (map fst3) <$> (getEntriesByCategory categoryId)
+  (map fst3) <$> (getAllEntriesByCategory categoryId)
   >>= getFeed RssFeedR >>= rssFeed
 
 getCategoryAtomFeedR :: CategoryId -> Handler RepAtom
 getCategoryAtomFeedR categoryId =
-  (map fst3) <$> (getEntriesByCategory categoryId)
+  (map fst3) <$> (getAllEntriesByCategory categoryId)
   >>= getFeed AtomFeedR >>= atomFeed
 
 getFeed :: Route (HandlerSite Handler) -> [Entity Entry] -> Handler (Feed (Route (HandlerSite Handler)))

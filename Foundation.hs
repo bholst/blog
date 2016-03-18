@@ -150,6 +150,7 @@ instance Yesod App where
               then return Authorized
               else unauthorizedI MsgAdminAndAuthorAuthorizedDeleteComment
     isAuthorized BlogR                 _ = allAuthorized
+    isAuthorized (BlogPageR _)         _ = allAuthorized
     isAuthorized (EntryR _)            _ = allAuthorized
     isAuthorized CategoriesR           _ = adminAuthorized
     isAuthorized (EditCategoryR   _)   _ = adminAuthorized
@@ -164,6 +165,7 @@ instance Yesod App where
     isAuthorized RssFeedR              _ = allAuthorized
     isAuthorized AtomFeedR             _ = allAuthorized
     isAuthorized (CategoryR _)         _ = allAuthorized
+    isAuthorized (CategoryPageR _ _)   _ = allAuthorized
     isAuthorized (CategoryRssFeedR _)  _ = allAuthorized
     isAuthorized (CategoryAtomFeedR _) _ = allAuthorized
     isAuthorized UploadsR              _ = adminAuthorized
